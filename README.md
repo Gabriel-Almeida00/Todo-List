@@ -31,29 +31,22 @@ Este é um projeto simples de uma aplicação de gerenciamento de tarefas (ToDo 
 
 git clone https://github.com/seu-usuario/todo-list-java.git
 
-arduino
-Copy code
 
 2. Acesse o diretório do projeto:
 
 cd todo-list-java
 
-lua
-Copy code
 
 3. Compile os arquivos Java:
 
 javac -d out src/*.java
 
-css
-Copy code
+
 
 4. Execute a classe Main:
 
 java -classpath out Main
 
-php
-Copy code
 
 ## Exemplo de Uso
 
@@ -71,6 +64,3 @@ As tarefas são salvas em um arquivo CSV chamado "tasks.csv" no mesmo diretório
 
 Este projeto é apenas um exemplo simples, mas sinta-se à vontade para criar um fork, fazer melhorias e contribuir. Sinta-se livre para abrir problemas (issues) se encontrar algum bug ou tiver alguma sugestão.
 
-## Licença
-
-Este projeto está licenciado sob a Licença MIT - consulte o arquivo LICENSE.md para obter detalhes.
