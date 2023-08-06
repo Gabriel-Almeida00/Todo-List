@@ -29,27 +29,6 @@ public class Task {
         this.alarms = new ArrayList();
     }
 
-    public String getFormattedDeadline() {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        return sdf.format(deadline);
-    }
-
-    public void displayTaskDetails() {
-        System.out.println("Nome: " + name);
-        System.out.println("Descrição: " + description);
-        System.out.println("Data de Término: " + getFormattedDeadline());
-        System.out.println("Prioridade: " + priority);
-        System.out.println("Categoria: " + category);
-        System.out.println("Status: " + status);
-    }
-
-    public String formatDeadline() {
-        return deadline.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
-    }
-
-    public String formatAlarm(LocalDateTime alarmDateTime) {
-        return alarmDateTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
-    }
 
     // Método para adicionar um alarme à tarefa
     public void addAlarm(LocalDateTime alarmDateTime) {

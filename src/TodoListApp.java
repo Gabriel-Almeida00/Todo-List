@@ -26,7 +26,7 @@ public class TodoListApp {
             System.out.println("0. Sair");
             System.out.print("Escolha uma opção: ");
             choice = scanner.nextInt();
-            scanner.nextLine(); // Limpar o buffer
+            scanner.nextLine();
 
             switch (choice) {
                 case 1:
@@ -41,12 +41,12 @@ public class TodoListApp {
                     System.out.print("Hora de término (formato: HH:mm): ");
                     String deadlineTimeInput = scanner.nextLine();
 
-                    // Criar objeto LocalDateTime com data, hora e minuto definidos
                     LocalDateTime deadline = LocalDateTime.parse(deadlineDateInput + " " + deadlineTimeInput,
                             DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+
                     System.out.print("Nível de prioridade (1 a 5): ");
                     int priority = scanner.nextInt();
-                    scanner.nextLine(); // Limpar o buffer
+                    scanner.nextLine();
                     System.out.print("Categoria: ");
                     String category = scanner.nextLine();
                     System.out.print("Status (todo, doing, done): ");
@@ -105,7 +105,7 @@ public class TodoListApp {
                     LocalDateTime newDeadline = LocalDateTime.parse(scanner.nextLine());
                     System.out.print("Nova prioridade (1 a 5): ");
                     int newPriority = scanner.nextInt();
-                    scanner.nextLine(); // Limpar o buffer
+                    scanner.nextLine();
                     System.out.print("Nova categoria: ");
                     String newCategory = scanner.nextLine();
                     System.out.print("Novo status (todo, doing, done): ");
