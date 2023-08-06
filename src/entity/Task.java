@@ -1,24 +1,32 @@
 package entity;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Task {
     private String name;
     private String description;
-    private String deadline;
+    private LocalDateTime deadline;
     private int priority;
     private String category;
     private String status;
+    private List<LocalDateTime>  alarms; // Lista de alarmes para a tarefa
 
     // Construtor
-    public Task(String name, String description, String deadline, int priority, String category, String status) {
+
+    public Task(String name, String description, LocalDateTime deadline, int priority, String category, String status) {
         this.name = name;
         this.description = description;
         this.deadline = deadline;
         this.priority = priority;
         this.category = category;
         this.status = status;
+        this.alarms = new ArrayList();
     }
 
     public String getFormattedDeadline() {
@@ -33,6 +41,24 @@ public class Task {
         System.out.println("Prioridade: " + priority);
         System.out.println("Categoria: " + category);
         System.out.println("Status: " + status);
+    }
+
+    public String formatDeadline() {
+        return deadline.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+    }
+
+    public String formatAlarm(LocalDateTime alarmDateTime) {
+        return alarmDateTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+    }
+
+    // Método para adicionar um alarme à tarefa
+    public void addAlarm(LocalDateTime alarmDateTime) {
+        alarms.add(alarmDateTime);
+    }
+
+    // Método para retornar os alarmes da tarefa
+    public List<LocalDateTime> getAlarms() {
+        return alarms;
     }
 
     public String getName() {
@@ -51,11 +77,11 @@ public class Task {
         this.description = description;
     }
 
-    public String getDeadline() {
+    public LocalDateTime getDeadline() {
         return deadline;
     }
 
-    public void setDeadline(String deadline) {
+    public void setDeadline(LocalDateTime deadline) {
         this.deadline = deadline;
     }
 
