@@ -24,6 +24,8 @@ Este é um projeto simples de uma aplicação de gerenciamento de tarefas (ToDo 
 - Atualizar uma tarefa existente
 
 - Contar o número de tarefas concluídas, para fazer e em andamento
+- ###  Alarmes
+O novo recurso de alarme permite ao usuário habilitar um aviso para uma tarefa específica. Ao criar uma tarefa, o usuário pode definir o período de antecedência do alarme em minutos. O sistema verificará periodicamente se há tarefas com alarmes configurados próximos ou iguais ao momento atual e exibirá um alerta para o usuário.
 
 ## Como executar o projeto
 
