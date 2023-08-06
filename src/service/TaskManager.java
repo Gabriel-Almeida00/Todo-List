@@ -3,15 +3,19 @@ package service;
 import entity.Task;
 
 import java.io.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class TaskManager {
     private List<Task> tasks;
+    private List<Task> tasksWithAlarms;
     private final String dataFilePath = "/home/gabriel/IdeaProjects/todo-list\n";
 
     public TaskManager() {
         tasks = new ArrayList<>();
+        tasksWithAlarms = new ArrayList<>();
         File file = new File(dataFilePath);
         if (!file.exists()) {
             try {
@@ -31,7 +35,7 @@ public class TaskManager {
     }
 
     // Atualizar tarefa por nome
-    public void updateTask(String name, String newDescription, String newDeadline, int newPriority, String newCategory, String newStatus) {
+    public void updateTask(String name, String newDescription, LocalDateTime newDeadline, int newPriority, String newCategory, String newStatus) {
         for (Task task : tasks) {
             if (task.getName().equalsIgnoreCase(name)) {
                 task.setDescription(newDescription);
@@ -112,6 +116,25 @@ public class TaskManager {
         return count;
     }
 
+
+    public void addTaskWithPriorityRebalance(Task task, boolean enableAlarm, int alarmPeriodMinutes) {
+        tasks.add(task);
+
+        Collections.sort(tasks, (t1, t2) -> Integer.compare(t2.getPriority(), t1.getPriority()));
+
+        saveDataToFile();
+
+        if (enableAlarm) {
+            LocalDateTime alarmDateTime = task.getDeadline().minusMinutes(alarmPeriodMinutes);
+            task.addAlarm(alarmDateTime);
+            tasksWithAlarms.add(task);
+        }
+    }
+
+    public List<Task> getTasksWithAlarms() {
+        return tasksWithAlarms; // Retorna a lista de tarefas com alarmes
+    }
+
     // Carregar dados do arquivo
     private void loadDataFromFile() {
         try (BufferedReader reader = new BufferedReader(new FileReader(dataFilePath))) {
@@ -121,7 +144,7 @@ public class TaskManager {
                 if (parts.length == 6) {
                     String name = parts[0].trim();
                     String description = parts[1].trim();
-                    String deadline = parts[2].trim();
+                    LocalDateTime deadline = LocalDateTime.parse(parts[2].trim());
                     int priority = Integer.parseInt(parts[3].trim());
                     String category = parts[4].trim();
                     String status = parts[5].trim();
