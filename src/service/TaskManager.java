@@ -2,11 +2,12 @@ package service;
 
 import entity.Task;
 
-import java.io.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class TaskManager {
@@ -15,7 +16,7 @@ public class TaskManager {
 
     private FileUtil dataReader;
 
-    public TaskManager( FileUtil fileService) {
+    public TaskManager(FileUtil fileService) {
         tasks = new ArrayList<>();
         tasksWithAlarms = new ArrayList<>();
         this.dataReader = fileService;
@@ -23,45 +24,33 @@ public class TaskManager {
     }
 
     public void loadDataFromFile() {
-        List<String> lines = dataReader.readData();
-
-        for (String line : lines) {
-            String[] parts = line.split(",");
-            if (parts.length == 6) {
-                String name = parts[0].trim();
-                String description = parts[1].trim();
-                LocalDateTime deadline = LocalDateTime.parse(parts[2].trim());
-                int priority = Integer.parseInt(parts[3].trim());
-                String category = parts[4].trim();
-                String status = parts[5].trim();
-                Task task = new Task(name, description, deadline, priority, category, status);
-                tasks.add(task);
-            }
-        }
+        tasks = dataReader.loadTasks();
     }
 
     public void saveDataToFile() {
-        List<String> lines = new ArrayList<>();
-        for (Task task : tasks) {
-            lines.add(task.getName() + "," + task.getDescription() + "," + task.getDeadline() + ","
-                    + task.getPriority() + "," + task.getCategory() + "," + task.getStatus());
-        }
-        dataReader.writeData(lines);
+        dataReader.saveTasks(tasks);
     }
+
 
     public List<Task> listAllTasks(){
         return tasks;
     }
 
-
-    // Adicionar uma nova tarefa
-    public void addTask(Task task) {
+    public void addTaskWithPriorityRebalance(Task task, boolean enableAlarm, int alarmPeriodMinutes) {
         tasks.add(task);
+
+        Collections.sort(tasks, (t1, t2) -> Integer.compare(t2.getPriority(), t1.getPriority()));
+
         saveDataToFile();
+
+        if (enableAlarm) {
+            LocalDateTime alarmDateTime = task.getDeadline().minusMinutes(alarmPeriodMinutes);
+            task.addAlarm(alarmDateTime);
+            tasksWithAlarms.add(task);
+        }
     }
 
-    // Atualizar tarefa por nome
-    public void updateTask(String name, String newDescription, LocalDateTime newDeadline, int newPriority, String newCategory, String newStatus) {
+    public void updateTask(String name, String newDescription, LocalDateTime newDeadline, int newPriority, String newCategory, String newStatus, boolean enableAlarm, int alarmPeriodMinutes) {
         for (Task task : tasks) {
             if (task.getName().equalsIgnoreCase(name)) {
                 task.setDescription(newDescription);
@@ -70,13 +59,24 @@ public class TaskManager {
                 task.setCategory(newCategory);
                 task.setStatus(newStatus);
                 saveDataToFile();
+
+                if (enableAlarm) {
+                    LocalDateTime alarmDateTime = newDeadline.minusMinutes(alarmPeriodMinutes);
+                    task.getAlarms().clear();
+                    task.addAlarm(alarmDateTime);
+                    tasksWithAlarms.add(task);
+                } else {
+                    task.getAlarms().clear();
+                    tasksWithAlarms.remove(task);
+                }
+
                 return;
             }
         }
         System.out.println("Tarefa não encontrada.");
     }
 
-    // Listar tarefas por categoria
+
     public List<Task> getTasksByCategory(String category) {
         List<Task> filteredTasks = new ArrayList<>();
         for (Task task : tasks) {
@@ -87,7 +87,6 @@ public class TaskManager {
         return filteredTasks;
     }
 
-    // Listar tarefas por prioridade
     public List<Task> getTasksByPriority(int priority) {
         List<Task> filteredTasks = new ArrayList<>();
         for (Task task : tasks) {
@@ -98,7 +97,6 @@ public class TaskManager {
         return filteredTasks;
     }
 
-    // Listar tarefas por status
     public List<Task> getTasksByStatus(String status) {
         List<Task> filteredTasks = new ArrayList<>();
         for (Task task : tasks) {
@@ -109,7 +107,6 @@ public class TaskManager {
         return filteredTasks;
     }
 
-    // Contar tarefas concluídas
     public int countCompletedTasks() {
         int count = 0;
         for (Task task : tasks) {
@@ -120,7 +117,6 @@ public class TaskManager {
         return count;
     }
 
-    // Contar tarefas a fazer
     public int countToDoTasks() {
         int count = 0;
         for (Task task : tasks) {
@@ -131,7 +127,6 @@ public class TaskManager {
         return count;
     }
 
-    // Contar tarefas em andamento
     public int countDoingTasks() {
         int count = 0;
         for (Task task : tasks) {
@@ -147,20 +142,12 @@ public class TaskManager {
         saveDataToFile();
     }
 
-
-    public void addTaskWithPriorityRebalance(Task task, boolean enableAlarm, int alarmPeriodMinutes) {
-        tasks.add(task);
-
-        Collections.sort(tasks, (t1, t2) -> Integer.compare(t2.getPriority(), t1.getPriority()));
-
-        saveDataToFile();
-
-        if (enableAlarm) {
-            LocalDateTime alarmDateTime = task.getDeadline().minusMinutes(alarmPeriodMinutes);
-            task.addAlarm(alarmDateTime);
-            tasksWithAlarms.add(task);
-        }
+    public List<Task> filterTasksByDate(LocalDate date) {
+        return tasks.stream()
+                .filter(task -> task.getDeadline().toLocalDate().isEqual(date))
+                .collect(Collectors.toList());
     }
+
 
     public List<Task> getTasksWithAlarms() {
         List<Task> tasksWithAlarms = new ArrayList<>();

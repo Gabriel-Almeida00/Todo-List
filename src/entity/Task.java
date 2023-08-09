@@ -1,11 +1,7 @@
 package entity;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class Task {
@@ -15,9 +11,8 @@ public class Task {
     private int priority;
     private String category;
     private String status;
-    private List<LocalDateTime>  alarms; // Lista de alarmes para a tarefa
+    private List<LocalDateTime>  alarms;
 
-    // Construtor
 
     public Task(String name, String description, LocalDateTime deadline, int priority, String category, String status) {
         this.name = name;
@@ -26,29 +21,23 @@ public class Task {
         this.priority = priority;
         this.category = category;
         this.status = status;
-        this.alarms = new ArrayList();
+        this.alarms = new ArrayList<>();
     }
 
     public boolean hasAlarms() {
         return !alarms.isEmpty();
     }
 
-    // Método para adicionar um alarme à tarefa
     public void addAlarm(LocalDateTime alarmDateTime) {
         alarms.add(alarmDateTime);
     }
 
-    // Método para retornar os alarmes da tarefa
     public List<LocalDateTime> getAlarms() {
         return alarms;
     }
 
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getDescription() {
@@ -89,5 +78,15 @@ public class Task {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return "Name: " + name +
+                "\nDescription: " + description +
+                "\nDeadline: " + deadline +
+                "\nPriority: " + priority +
+                "\nCategory: " + category +
+                "\nStatus: " + status;
     }
 }
