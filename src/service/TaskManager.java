@@ -3,28 +3,54 @@ package service;
 import entity.Task;
 
 import java.io.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 
 public class TaskManager {
-    private List<Task> tasks;
+    public List<Task> tasks;
     private List<Task> tasksWithAlarms;
-    private final String dataFilePath = "/home/gabriel/IdeaProjects/todo-list\n";
 
-    public TaskManager() {
+    private FileUtil dataReader;
+
+    public TaskManager( FileUtil fileService) {
         tasks = new ArrayList<>();
         tasksWithAlarms = new ArrayList<>();
-        File file = new File(dataFilePath);
-        if (!file.exists()) {
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
+        this.dataReader = fileService;
+        loadDataFromFile();
+    }
+
+    public void loadDataFromFile() {
+        List<String> lines = dataReader.readData();
+
+        for (String line : lines) {
+            String[] parts = line.split(",");
+            if (parts.length == 6) {
+                String name = parts[0].trim();
+                String description = parts[1].trim();
+                LocalDateTime deadline = LocalDateTime.parse(parts[2].trim());
+                int priority = Integer.parseInt(parts[3].trim());
+                String category = parts[4].trim();
+                String status = parts[5].trim();
+                Task task = new Task(name, description, deadline, priority, category, status);
+                tasks.add(task);
             }
         }
-        loadDataFromFile();
+    }
+
+    public void saveDataToFile() {
+        List<String> lines = new ArrayList<>();
+        for (Task task : tasks) {
+            lines.add(task.getName() + "," + task.getDescription() + "," + task.getDeadline() + ","
+                    + task.getPriority() + "," + task.getCategory() + "," + task.getStatus());
+        }
+        dataReader.writeData(lines);
+    }
+
+    public List<Task> listAllTasks(){
+        return tasks;
     }
 
 
@@ -116,6 +142,11 @@ public class TaskManager {
         return count;
     }
 
+    public void deleteTask(String name) {
+        tasks.removeIf(task -> task.getName().equalsIgnoreCase(name));
+        saveDataToFile();
+    }
+
 
     public void addTaskWithPriorityRebalance(Task task, boolean enableAlarm, int alarmPeriodMinutes) {
         tasks.add(task);
@@ -132,40 +163,12 @@ public class TaskManager {
     }
 
     public List<Task> getTasksWithAlarms() {
-        return tasksWithAlarms; // Retorna a lista de tarefas com alarmes
-    }
-
-    // Carregar dados do arquivo
-    private void loadDataFromFile() {
-        try (BufferedReader reader = new BufferedReader(new FileReader(dataFilePath))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
-                if (parts.length == 6) {
-                    String name = parts[0].trim();
-                    String description = parts[1].trim();
-                    LocalDateTime deadline = LocalDateTime.parse(parts[2].trim());
-                    int priority = Integer.parseInt(parts[3].trim());
-                    String category = parts[4].trim();
-                    String status = parts[5].trim();
-                    Task task = new Task(name, description, deadline, priority, category, status);
-                    tasks.add(task);
-                }
+        List<Task> tasksWithAlarms = new ArrayList<>();
+        for (Task task : tasks) {
+            if (task.hasAlarms()) {
+                tasksWithAlarms.add(task);
             }
-        } catch (IOException | NumberFormatException e) {
-            e.printStackTrace();
         }
-    }
-
-    // Salvar dados no arquivo
-    private void saveDataToFile() {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(dataFilePath))) {
-            for (Task task : tasks) {
-                writer.write(task.getName() + "," + task.getDescription() + "," + task.getDeadline() + ","
-                        + task.getPriority() + "," + task.getCategory() + "," + task.getStatus() + "\n");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        return tasksWithAlarms;
     }
 }
