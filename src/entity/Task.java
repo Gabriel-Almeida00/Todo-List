@@ -29,6 +29,9 @@ public class Task {
         this.alarms = new ArrayList();
     }
 
+    public boolean hasAlarms() {
+        return !alarms.isEmpty();
+    }
 
     // Método para adicionar um alarme à tarefa
     public void addAlarm(LocalDateTime alarmDateTime) {

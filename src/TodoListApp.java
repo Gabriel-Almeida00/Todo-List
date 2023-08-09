@@ -1,7 +1,7 @@
 import entity.Task;
+import service.FileUtil;
 import service.TaskManager;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -9,7 +9,8 @@ import java.util.Scanner;
 
 public class TodoListApp {
     public static void main(String[] args) {
-        TaskManager taskManager = new TaskManager();
+        FileUtil fileUtil = null;
+        TaskManager taskManager = new TaskManager(fileUtil);
         Scanner scanner = new Scanner(System.in);
         int choice;
 
