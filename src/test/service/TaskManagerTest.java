@@ -4,7 +4,7 @@ package test.service;
 import entity.Task;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import service.FileUtil;
+import interfaces.FileUtil;
 import service.TaskManager;
 
 import java.time.LocalDateTime;
@@ -30,19 +30,20 @@ public class TaskManagerTest {
 
     @Test
     public void testLoadDataFromFile() {
-        // Arrange
-        List<String> testData = Arrays.asList(
-                "Task 1,Description 1,2023-08-10T12:00,1,Category 1,Incomplete",
-                "Task 2,Description 2,2023-08-11T14:00,2,Category 2,Complete"
+        List<Task> testData = Arrays.asList(
+                new Task("Task 1", "Description 1", LocalDateTime.parse("2023-08-10T12:00"), 1, "Category 1", "Incomplete"),
+                new Task("Task 2", "Description 2", LocalDateTime.parse("2023-08-11T14:00"), 2, "Category 2", "Complete")
         );
-        when(fileUtilMock.readData()).thenReturn(testData);
+        when(fileUtilMock.loadTasks()).thenReturn(testData);
 
-        // Act
         taskManager.loadDataFromFile();
 
-        // Assert
         List<Task> loadedTasks = taskManager.listAllTasks();
         assertEquals(2, loadedTasks.size());
+        assertEquals("Task 1", loadedTasks.get(0).getName());
+        assertEquals("Description 1", loadedTasks.get(0).getDescription());
+        assertEquals("Task 2", loadedTasks.get(1).getName());
+        assertEquals("Description 2", loadedTasks.get(1).getDescription());
     }
     @Test
     public void testSaveDataToFile() {
