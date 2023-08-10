@@ -14,21 +14,21 @@ public class TaskManager {
     public List<Task> tasks;
     private List<Task> tasksWithAlarms;
 
-    private FileUtil dataReader;
+    private FileUtil fileUtil;
 
-    public TaskManager(FileUtil fileService) {
+    public TaskManager(FileUtil fileUtil) {
         tasks = new ArrayList<>();
         tasksWithAlarms = new ArrayList<>();
-        this.dataReader = fileService;
+        this.fileUtil = fileUtil;
         loadDataFromFile();
     }
 
     public void loadDataFromFile() {
-        tasks = dataReader.loadTasks();
+        tasks = fileUtil.loadTasks();
     }
 
     public void saveDataToFile() {
-        dataReader.saveTasks(tasks);
+        fileUtil.saveTasks(tasks);
     }
 
 

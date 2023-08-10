@@ -184,6 +184,7 @@ public class Menu {
     private void deleteTask() {
         System.out.println();
         System.out.println("=== Delete Task ===");
+        System.out.println("Nome da Task: ");
         String taskName = scanner.nextLine();
 
         List<Task> tasks = taskManager.listAllTasks();

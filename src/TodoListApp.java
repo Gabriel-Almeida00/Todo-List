@@ -12,8 +12,8 @@ import java.util.Scanner;
 public class TodoListApp {
     public static void main(String[] args) {
         String filePath = "/home/gabriel/IdeaProjects/list";
-        FileUtil fileUtil = new FileManager(filePath);
-        TaskManager taskManager = new TaskManager(fileUtil);
+        FileManager fileManager = new FileManager(filePath);
+        TaskManager taskManager = new TaskManager(fileManager);
         Menu menu = new Menu(taskManager);
         menu.start();
         }
