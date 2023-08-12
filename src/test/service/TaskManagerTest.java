@@ -86,7 +86,9 @@ public class TaskManagerTest {
 
         taskManager.loadDataFromFile();
 
-        taskManager.updateTask("Task1", "UpdatedDescription", LocalDateTime.parse("2023-08-11T14:00"), 3, "UpdatedCategory", "Closed", true, 30);
+        Task taskToAdd = new Task("Task1", "NewDescription", LocalDateTime.parse("2023-08-11T14:00"), 3, "Category3", "Open");
+
+        taskManager.updateTask(taskToAdd, true, 30);
 
         verify(fileUtilMock, times(1)).saveTasks(anyList());
 
@@ -95,11 +97,11 @@ public class TaskManagerTest {
 
         Task updatedTask = updatedTasks.get(0);
         assertEquals("Task1", updatedTask.getName());
-        assertEquals("UpdatedDescription", updatedTask.getDescription());
+        assertEquals("NewDescription", updatedTask.getDescription());
         assertEquals(LocalDateTime.parse("2023-08-11T14:00"), updatedTask.getDeadline());
         assertEquals(3, updatedTask.getPriority());
-        assertEquals("UpdatedCategory", updatedTask.getCategory());
-        assertEquals("Closed", updatedTask.getStatus());
+        assertEquals("Category3", updatedTask.getCategory());
+        assertEquals("Open", updatedTask.getStatus());
 
         Task task2 = updatedTasks.get(1);
         assertEquals("Task2", task2.getName());

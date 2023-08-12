@@ -9,7 +9,7 @@ import java.util.List;
 public interface TaskInterface {
     public List<Task> listAllTasks();
     public void addTaskWithPriorityRebalance(Task task, boolean enableAlarm, int alarmPeriodMinutes);
-    public void updateTask(String name, String newDescription, LocalDateTime newDeadline, int newPriority, String newCategory, String newStatus, boolean enableAlarm, int alarmPeriodMinutes);
+    public void updateTask(Task task, boolean enableAlarm, int alarmPeriodMinutes);
     public List<Task> getTasksByCategory(String category);
     public List<Task> getTasksByPriority(int priority);
     public List<Task> getTasksByStatus(String status);

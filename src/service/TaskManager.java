@@ -2,6 +2,7 @@ package service;
 
 import entity.Task;
 import interfaces.FileUtil;
+import interfaces.TaskInterface;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -11,15 +12,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-public class TaskManager {
+public class TaskManager implements TaskInterface {
     public List<Task> tasks;
-    private List<Task> tasksWithAlarms;
 
     private FileUtil fileUtil;
 
     public TaskManager(FileUtil fileUtil) {
         tasks = new ArrayList<>();
-        tasksWithAlarms = new ArrayList<>();
         this.fileUtil = fileUtil;
         loadDataFromFile();
     }
@@ -47,28 +46,25 @@ public class TaskManager {
         if (enableAlarm) {
             LocalDateTime alarmDateTime = task.getDeadline().minusMinutes(alarmPeriodMinutes);
             task.addAlarm(alarmDateTime);
-            tasksWithAlarms.add(task);
         }
     }
 
-    public void updateTask(String name, String newDescription, LocalDateTime newDeadline, int newPriority, String newCategory, String newStatus, boolean enableAlarm, int alarmPeriodMinutes) {
+    public void updateTask(Task updatedTask, boolean enableAlarm, int alarmPeriodMinutes) {
         for (Task task : tasks) {
-            if (task.getName().equalsIgnoreCase(name)) {
-                task.setDescription(newDescription);
-                task.setDeadline(newDeadline);
-                task.setPriority(newPriority);
-                task.setCategory(newCategory);
-                task.setStatus(newStatus);
+            if (task.getName().equalsIgnoreCase(updatedTask.getName())) {
+                task.setDescription(updatedTask.getDescription());
+                task.setDeadline(updatedTask.getDeadline());
+                task.setPriority(updatedTask.getPriority());
+                task.setCategory(updatedTask.getCategory());
+                task.setStatus(updatedTask.getStatus());
                 saveDataToFile();
 
                 if (enableAlarm) {
-                    LocalDateTime alarmDateTime = newDeadline.minusMinutes(alarmPeriodMinutes);
+                    LocalDateTime alarmDateTime = updatedTask.getDeadline().minusMinutes(alarmPeriodMinutes);
                     task.getAlarms().clear();
                     task.addAlarm(alarmDateTime);
-                    tasksWithAlarms.add(task);
                 } else {
                     task.getAlarms().clear();
-                    tasksWithAlarms.remove(task);
                 }
 
                 return;

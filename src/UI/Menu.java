@@ -240,7 +240,8 @@ public class Menu {
             } while (alarmPeriodMinutes <= 0);
         }
 
-        taskManager.updateTask(name, newDescripton, deadline, newPriority, newCategory, newStatus, enableAlarm, alarmPeriodMinutes);
+        Task newTask = new Task(name, newDescripton, deadline, newPriority, newCategory, newStatus);
+        taskManager.updateTask(newTask, enableAlarm, alarmPeriodMinutes);
         System.out.println("Tarefa atualizada com sucesso!");
     }
 
