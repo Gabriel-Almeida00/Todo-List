@@ -1,7 +1,8 @@
-package UI;
+package todo.list.UI;
 
-import entity.Task;
-import service.TaskManager;
+
+import todo.list.entity.Task;
+import todo.list.service.TaskManager;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -19,6 +20,8 @@ public class Menu {
         this.taskManager = taskManager;
         this.scanner = new Scanner(System.in);
     }
+
+
 
     public void start() {
         boolean exit = false;

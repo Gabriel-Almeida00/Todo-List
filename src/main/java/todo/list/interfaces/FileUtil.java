@@ -1,7 +1,8 @@
-package interfaces;
+package todo.list.interfaces;
 
 
-import entity.Task;
+
+import todo.list.entity.Task;
 
 import java.util.List;
 

@@ -1,11 +1,11 @@
-package test.service;
+package todo.list.service;
 
 
-import entity.Task;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import interfaces.FileUtil;
-import service.TaskManager;
+import todo.list.entity.Task;
+import todo.list.interfaces.FileUtil;
+
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -142,13 +142,13 @@ public class TaskManagerTest {
     @Test
     public void testGetTasksByStatus() {
         List<Task> mockTasks = new ArrayList<>();
-        mockTasks.add(new Task("Task1", "Description1", LocalDateTime.parse("2023-08-09T12:00"), 1, "Category1", "Open"));
-        mockTasks.add(new Task("Task2", "Description2", LocalDateTime.parse("2023-08-10T15:00"), 2, "Category2", "In Progress"));
-        mockTasks.add(new Task("Task3", "Description3", LocalDateTime.parse("2023-08-11T18:00"), 1, "Category1", "Closed"));
+        mockTasks.add(new Task("Task1", "Description1", LocalDateTime.parse("2023-08-09T12:00"), 1, "Category1", "todo"));
+        mockTasks.add(new Task("Task2", "Description2", LocalDateTime.parse("2023-08-10T15:00"), 2, "Category2", "doing"));
+        mockTasks.add(new Task("Task3", "Description3", LocalDateTime.parse("2023-08-11T18:00"), 1, "Category1", "done"));
 
         taskManager.tasks = mockTasks;
 
-        List<Task> filteredTasks = taskManager.getTasksByStatus("Open");
+        List<Task> filteredTasks = taskManager.getTasksByStatus("todo");
 
         assertEquals(1, filteredTasks.size());
         assertEquals("Task1", filteredTasks.get(0).getName());

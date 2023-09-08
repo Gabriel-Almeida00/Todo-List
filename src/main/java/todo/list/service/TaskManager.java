@@ -1,8 +1,10 @@
-package service;
+package todo.list.service;
 
-import entity.Task;
-import interfaces.FileUtil;
-import interfaces.TaskInterface;
+
+
+import todo.list.entity.Task;
+import todo.list.interfaces.FileUtil;
+import todo.list.interfaces.TaskInterface;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
