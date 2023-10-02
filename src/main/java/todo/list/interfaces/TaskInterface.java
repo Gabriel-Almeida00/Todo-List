@@ -7,16 +7,16 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface TaskInterface {
-    public List<Task> listAllTasks();
-    public void addTaskWithPriorityRebalance(Task task, boolean enableAlarm, int alarmPeriodMinutes);
-    public void updateTask(Task task, boolean enableAlarm, int alarmPeriodMinutes);
-    public List<Task> getTasksByCategory(String category);
-    public List<Task> getTasksByPriority(int priority);
-    public List<Task> getTasksByStatus(String status);
-    public int countCompletedTasks();
-    public int countToDoTasks();
-    public int countDoingTasks();
-    public void deleteTask(String name);
-    public List<Task> filterTasksByDate(LocalDate date);
-    public List<Task> getTasksWithAlarms();
+     List<Task> listAllTasks();
+     void addTaskWithPriorityRebalance(Task task, boolean enableAlarm, int alarmPeriodMinutes);
+     void updateTask(Task task, boolean enableAlarm, int alarmPeriodMinutes);
+     List<Task> getTasksByCategory(String category);
+     List<Task> getTasksByPriority(int priority);
+     List<Task> getTasksByStatus(String status);
+     int countCompletedTasks();
+     int countToDoTasks();
+     int countDoingTasks();
+     void deleteTask(String name);
+     List<Task> filterTasksByDate(LocalDate date);
+     List<Task> getTasksWithAlarms();
 }
