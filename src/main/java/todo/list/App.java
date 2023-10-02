@@ -4,14 +4,16 @@
 package todo.list;
 
 import todo.list.UI.Menu;
-import todo.list.service.FileManager;
-import todo.list.service.TaskManager;
+import todo.list.service.FileService;
+import todo.list.service.TaskService;
+import todo.list.service.TaskParse;
 
 public class App {
     public static void main(String[] args) {
         String filePath = "/home/gabriel/IdeaProjects/list";
-        FileManager fileManager = new FileManager(filePath);
-        TaskManager taskManager = new TaskManager(fileManager);
+        TaskParse taskParse = new TaskParse();
+        FileService fileManager = new FileService(filePath, taskParse);
+        TaskService taskManager = new TaskService(fileManager);
         Menu menu = new Menu(taskManager);
         menu.start();
     }

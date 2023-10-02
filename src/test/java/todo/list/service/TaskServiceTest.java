@@ -4,9 +4,9 @@ package todo.list.service;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import todo.list.entity.Task;
-import todo.list.interfaces.FileUtil;
 
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,22 +17,31 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.*;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
-public class TaskManagerTest {
+public class TaskServiceTest {
 
-    private TaskManager taskManager;
-    private FileUtil fileUtilMock;
+    private TaskService taskManager;
+    private IFileService fileUtilMock;
 
     @BeforeEach
     public void setUp() {
-        fileUtilMock = mock(FileUtil.class);
-        taskManager = new TaskManager(fileUtilMock);
+        fileUtilMock = mock(IFileService.class);
+        taskManager = new TaskService(fileUtilMock);
     }
 
     @Test
-    public void testLoadDataFromFile() {
+    public void testLoadDataFromFile() throws IOException {
         List<Task> testData = Arrays.asList(
-                new Task("Task 1", "Description 1", LocalDateTime.parse("2023-08-10T12:00"), 1, "Category 1", "Incomplete"),
-                new Task("Task 2", "Description 2", LocalDateTime.parse("2023-08-11T14:00"), 2, "Category 2", "Complete")
+                new Task("Task 1",
+                        "Description 1",
+                        LocalDateTime.parse("2023-08-10T12:00"),
+                        1, "Category 1",
+                        "Incomplete"),
+                new Task("Task 2",
+                        "Description 2",
+                        LocalDateTime.parse("2023-08-11T14:00"),
+                        2,
+                        "Category 2",
+                        "Complete")
         );
         when(fileUtilMock.loadTasks()).thenReturn(testData);
 
@@ -46,10 +55,19 @@ public class TaskManagerTest {
         assertEquals("Description 2", loadedTasks.get(1).getDescription());
     }
     @Test
-    public void testSaveDataToFile() {
+    public void testSaveDataToFile() throws IOException {
         List<Task> mockTasks = new ArrayList<>();
-        mockTasks.add(new Task("Task1", "Description1", LocalDateTime.parse("2023-08-09T12:00"), 1, "Category1", "Open"));
-        mockTasks.add(new Task("Task2", "Description2", LocalDateTime.parse("2023-08-10T15:00"), 2, "Category2", "In Progress"));
+        mockTasks.add(new Task("Task1",
+                "Description1",
+                LocalDateTime.parse("2023-08-09T12:00"),
+                1,
+                "Category1",
+                "Open"));
+        mockTasks.add(new Task("Task2",
+                "Description2", LocalDateTime.parse("2023-08-10T15:00"),
+                2,
+                "Category2",
+                "In Progress"));
 
         taskManager.tasks = mockTasks;
 
@@ -78,7 +96,7 @@ public class TaskManagerTest {
     }
 
     @Test
-    public void testUpdateTask() {
+    public void testUpdateTask() throws IOException {
         List<Task> mockTasks = new ArrayList<>();
         mockTasks.add(new Task("Task1", "Description1", LocalDateTime.parse("2023-08-09T12:00"), 1, "Category1", "Open"));
         mockTasks.add(new Task("Task2", "Description2", LocalDateTime.parse("2023-08-10T15:00"), 2, "Category2", "In Progress"));
@@ -197,7 +215,7 @@ public class TaskManagerTest {
     }
 
     @Test
-    public void testAddTaskWithPriorityRebalance() {
+    public void testAddTaskWithPriorityRebalance() throws IOException {
         Task taskToAdd = new Task("NewTask", "NewDescription", LocalDateTime.parse("2023-08-11T14:00"), 3, "Category3", "Open");
 
         List<Task> mockTasks = new ArrayList<>();
@@ -251,7 +269,7 @@ public class TaskManagerTest {
     }
 
     @Test
-    public void testDeleteTask() {
+    public void testDeleteTask() throws IOException {
         List<Task> mockTasks = new ArrayList<>();
         mockTasks.add(new Task("Task1", "Description1", LocalDateTime.parse("2023-08-09T12:00"), 1, "Category1", "Open"));
         mockTasks.add(new Task("Task2", "Description2", LocalDateTime.parse("2023-08-10T15:00"), 2, "Category2", "In Progress"));

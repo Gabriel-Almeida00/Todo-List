@@ -2,7 +2,7 @@ package todo.list.UI;
 
 
 import todo.list.entity.Task;
-import todo.list.service.TaskManager;
+import todo.list.service.TaskService;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,15 +13,13 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Menu {
-    private TaskManager taskManager;
+    private TaskService taskManager;
     private Scanner scanner;
 
-    public Menu(TaskManager taskManager) {
+    public Menu(TaskService taskManager) {
         this.taskManager = taskManager;
         this.scanner = new Scanner(System.in);
     }
-
-
 
     public void start() {
         boolean exit = false;
@@ -104,58 +102,31 @@ public class Menu {
     }
 
     private void addTask() {
-        System.out.println();
-        System.out.println("=== Add Task ===");
         checkAlarms(taskManager);
+        System.out.println("=== Add Task ===");
+        System.out.print("Nome (mínimo 3 caracteres): ");
+        String name = scanner.nextLine();
 
-        String name;
-        do {
-            System.out.print("Nome (mínimo 3 caracteres): ");
-            name = scanner.nextLine();
-        } while (name.length() < 3);
+        System.out.print("Descrição(mínimo 3 caracteres): ");
+        String description = scanner.nextLine();
 
-        String description;
-        do {
-            System.out.print("Descrição(mínimo 3 caracteres): ");
-             description = scanner.nextLine();
-        } while (description.length() < 3);
+        System.out.print("Data de término (formato: dd/MM/yyyy): ");
+        String deadlineDateInput = scanner.nextLine();
 
-        String deadlineDateInput;
-        String deadlineTimeInput;
-        LocalDateTime deadline;
-        do {
-            System.out.print("Data de término (formato: dd/MM/yyyy): ");
-            deadlineDateInput = scanner.nextLine();
-            System.out.print("Hora de término (formato: HH:mm): ");
-            deadlineTimeInput = scanner.nextLine();
+        System.out.print("Hora de término (formato: HH:mm): ");
+        String deadlineTimeInput = scanner.nextLine();
 
-            try {
-                deadline = LocalDateTime.parse(deadlineDateInput + " " + deadlineTimeInput,
-                        DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
-                break;
-            } catch (DateTimeParseException e) {
-                System.out.println("Formato de data ou hora inválido. Tente novamente.");
-            }
-        } while (true);
+        LocalDateTime deadline = LocalDateTime.parse(deadlineDateInput + " " + deadlineTimeInput, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
 
-        int priority;
-        do {
-            System.out.print("Nível de prioridade (1 a 5): ");
-            priority = scanner.nextInt();
-            scanner.nextLine();
-        } while (priority < 1 || priority > 5);
+        System.out.print("Nível de prioridade (1 a 5): ");
+        int priority = scanner.nextInt();
+        scanner.nextLine();
 
-        String category;
-        do {
-            System.out.print("Categoria(mínimo 3 caracteres): ");
-            category = scanner.nextLine();
-        } while (category.length() <= 3);
+        System.out.print("Categoria(mínimo 3 caracteres): ");
+        String category = scanner.nextLine();
 
-        String status;
-        do {
-            System.out.print("Status (todo, doing, done): ");
-            status = scanner.nextLine().toLowerCase();
-        } while (!Arrays.asList("todo", "doing", "done").contains(status));
+        System.out.print("Status (todo, doing, done): ");
+        String status = scanner.nextLine().toLowerCase();
 
         Task newTask = new Task(name, description, deadline, priority, category, status);
 
@@ -164,84 +135,53 @@ public class Menu {
         boolean enableAlarm = enableAlarmChoice.equalsIgnoreCase("S");
 
         if (enableAlarm) {
-            int alarmPeriodMinutes;
-            do {
-                System.out.print("Digite o período de antecedência do alarme (em minutos): ");
-                alarmPeriodMinutes = scanner.nextInt();
-                scanner.nextLine();
-            } while (alarmPeriodMinutes <= 0);
+            System.out.print("Digite o período de antecedência do alarme (em minutos): ");
+            int alarmPeriodMinutes = scanner.nextInt();
+            scanner.nextLine();
 
             taskManager.addTaskWithPriorityRebalance(newTask, enableAlarm, alarmPeriodMinutes);
         } else {
             taskManager.addTaskWithPriorityRebalance(newTask, false, 0);
         }
     }
+
     public void updateTask() {
         System.out.println("=== Update Task with Alarm ===");
         Scanner scanner = new Scanner(System.in);
 
-        String name;
-        do {
-            System.out.print("Digite o nome da tarefa que deseja atualizar: ");
-            name = scanner.nextLine();
-        } while (name.isEmpty());
+        System.out.print("Digite o nome da tarefa que deseja atualizar: ");
+        String name = scanner.nextLine();
 
-        String newDescripton;
-        do {
-            System.out.print("Nova descrição: ");
-            newDescripton = scanner.nextLine();
-        } while (newDescripton.isEmpty());
+        System.out.print("Nova descrição: ");
+        String newDescripton = scanner.nextLine();
 
-        String deadlineDateInput;
-        String deadlineTimeInput;
-        LocalDateTime deadline;
-        do {
-            System.out.print("Data de término (formato: dd/MM/yyyy): ");
-            deadlineDateInput = scanner.nextLine();
-            System.out.print("Hora de término (formato: HH:mm): ");
-            deadlineTimeInput = scanner.nextLine();
+        System.out.print("Data de término (formato: dd/MM/yyyy): ");
+        String deadlineDateInput = scanner.nextLine();
 
-            try {
-                deadline = LocalDateTime.parse(deadlineDateInput + " " + deadlineTimeInput,
-                        DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
-                break;
-            } catch (DateTimeParseException e) {
-                System.out.println("Formato de data ou hora inválido. Tente novamente.");
-            }
-        } while (true);
+        System.out.print("Hora de término (formato: HH:mm): ");
+        String deadlineTimeInput = scanner.nextLine();
 
-        int newPriority;
-        do {
-            System.out.print("Nova prioridade (1 a 5): ");
-            newPriority = scanner.nextInt();
-            scanner.nextLine();
-        } while (newPriority < 1 || newPriority > 5);
+        LocalDateTime deadline = LocalDateTime.parse(
+                deadlineDateInput + " " + deadlineTimeInput, DateTimeFormatter
+                        .ofPattern("dd/MM/yyyy HH:mm"));
 
-        String newCategory;
-        do{
-            System.out.print("Nova categoria: ");
-             newCategory = scanner.nextLine();
-        }while (newDescripton.isEmpty());
+        System.out.print("Nova prioridade (1 a 5): ");
+        int newPriority = scanner.nextInt();
+        scanner.nextLine();
 
+        System.out.print("Nova categoria: ");
+        String newCategory = scanner.nextLine();
 
-        String newStatus;
-        do {
-            System.out.print("Novo status (todo, doing, done): ");
-            newStatus = scanner.nextLine().toLowerCase();
-        } while (!Arrays.asList("todo", "doing", "done").contains(newStatus));
+        System.out.print("Novo status (todo, doing, done): ");
+        String newStatus = scanner.nextLine().toLowerCase();
 
         System.out.print("Deseja habilitar o alarme? (S/N): ");
         String enableAlarmChoice = scanner.nextLine();
         boolean enableAlarm = enableAlarmChoice.equalsIgnoreCase("S");
 
-        int alarmPeriodMinutes = 0;
-        if (enableAlarm) {
-            do {
-                System.out.print("Período do alarme em minutos (maior que 0): ");
-                alarmPeriodMinutes = scanner.nextInt();
-                scanner.nextLine();
-            } while (alarmPeriodMinutes <= 0);
-        }
+        System.out.print("Período do alarme em minutos (maior que 0): ");
+        int alarmPeriodMinutes = scanner.nextInt();
+        scanner.nextLine();
 
         Task newTask = new Task(name, newDescripton, deadline, newPriority, newCategory, newStatus);
         taskManager.updateTask(newTask, enableAlarm, alarmPeriodMinutes);
@@ -249,170 +189,90 @@ public class Menu {
     }
 
     private void deleteTask() {
-        System.out.println();
         System.out.println("=== Delete Task ===");
 
-        String taskName;
-        do {
-            System.out.print("Nome da Task: ");
-            taskName = scanner.nextLine();
-        } while (taskName.isEmpty());
+        System.out.print("Nome da Task: ");
+        String taskName = scanner.nextLine();
 
         List<Task> tasks = taskManager.listAllTasks();
-        boolean taskFound = false;
 
         for (Task task : tasks) {
             if (task.getName().equalsIgnoreCase(taskName)) {
                 taskManager.deleteTask(taskName);
                 System.out.println("Task '" + taskName + "' has been deleted.");
-                taskFound = true;
-                break;
-            }
-        }
 
-        if (!taskFound) {
-            System.out.println("Task '" + taskName + "' not found.");
+            }
         }
     }
 
     private void filterTasksByDate() {
-        System.out.println();
         System.out.println("=== Filter Tasks by Date ===");
+        System.out.print("Data do Filtro (formato: dd/MM/yyyy): ");
+        String dateString = scanner.nextLine();
 
-        String dateString;
-        LocalDate date = null;
-        do {
-            System.out.print("Data do Filtro (formato: dd/MM/yyyy): ");
-            dateString = scanner.nextLine();
-            try {
-                date = LocalDate.parse(dateString, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-            } catch (DateTimeParseException e) {
-                System.out.println("Data inválida. Insira novamente.");
-            }
-        } while (date == null);
-
+        LocalDate date = LocalDate.parse(dateString, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
         List<Task> filteredTasks = taskManager.filterTasksByDate(date);
 
-        if (filteredTasks.isEmpty()) {
-            System.out.println("Nenhuma tarefa encontrada para a data especificada.");
-        } else {
-            System.out.println("=== Tarefas em " + dateString + " ===");
-            for (Task task : filteredTasks) {
-                System.out.println(task);
-            }
+        for (Task task : filteredTasks) {
+            System.out.println(task);
         }
     }
 
-
     private void getTasksByCategory() {
-        System.out.println();
         System.out.println("=== Get Tasks by Category ===");
-
-        String category;
-        do {
-            System.out.print("Informe a categoria: ");
-            category = scanner.nextLine();
-            if (category.trim().isEmpty()) {
-                System.out.println("Categoria não pode estar vazia. Insira novamente.");
-            }
-        } while (category.trim().isEmpty());
+        System.out.print("Informe a categoria: ");
+        String category = scanner.nextLine();
 
         List<Task> filteredTasks = taskManager.getTasksByCategory(category);
-
-        if (filteredTasks.isEmpty()) {
-            System.out.println("Nenhuma tarefa encontrada na categoria '" + category + "'.");
-        } else {
-            System.out.println("Tarefas na categoria '" + category + "':");
-            for (Task task : filteredTasks) {
-                System.out.println(task);
-            }
+        for (Task task : filteredTasks) {
+            System.out.println(task);
         }
     }
 
     private void getTasksByPriority() {
-        System.out.println();
         System.out.println("=== Get Tasks by Priority ===");
+        System.out.print("Informe a prioridade (1 a 5): ");
 
-        int priority;
-        do {
-            System.out.print("Informe a prioridade (1 a 5): ");
-            if (scanner.hasNextInt()) {
-                priority = scanner.nextInt();
-                scanner.nextLine(); // Consume the newline character
-
-                if (priority < 1 || priority > 5) {
-                    System.out.println("Prioridade deve estar entre 1 e 5. Insira novamente.");
-                }
-            } else {
-                System.out.println("Entrada inválida. Insira novamente.");
-                scanner.nextLine();
-                priority = -1;
-            }
-        } while (priority < 1 || priority > 5);
+        int priority = scanner.nextInt();
+        scanner.nextLine();
 
         List<Task> filteredTasks = taskManager.getTasksByPriority(priority);
-
-        if (filteredTasks.isEmpty()) {
-            System.out.println("Nenhuma tarefa encontrada com prioridade " + priority + ".");
-        } else {
-            System.out.println("Tarefas com prioridade " + priority + ":");
-            for (Task task : filteredTasks) {
-                System.out.println(task);
-            }
+        for (Task task : filteredTasks) {
+            System.out.println(task);
         }
     }
-    private void getTasksByStatus() {
-        System.out.println();
-        System.out.println("=== Get Tasks by Status ===");
 
+    private void getTasksByStatus() {
+        System.out.println("=== Get Tasks by Status ===");
         System.out.print("Informe o status (todo, doing, done): ");
         String status = scanner.nextLine().trim().toLowerCase();
 
-        if (status.equals("todo") || status.equals("doing") || status.equals("done")) {
-            List<Task> filteredTasks = taskManager.getTasksByStatus(status);
-
-            if (filteredTasks.isEmpty()) {
-                System.out.println("Nenhuma tarefa encontrada com status '" + status + "'.");
-            } else {
-                System.out.println("Tarefas com status '" + status + "':");
-                for (Task task : filteredTasks) {
-                    System.out.println(task);
-                }
-            }
-        } else {
-            System.out.println("Status inválido. Opções válidas: todo, doing, done.");
+        List<Task> filteredTasks = taskManager.getTasksByStatus(status);
+        System.out.println("Tarefas com status '" + status + "':");
+        for (Task task : filteredTasks) {
+            System.out.println(task);
         }
     }
 
-
     private void countCompletedTasks() {
-        System.out.println();
         System.out.println("=== Count Completed Tasks ===");
-
         int completedTaskCount = taskManager.countCompletedTasks();
-
         System.out.println("Number of completed tasks: " + completedTaskCount);
     }
 
     private void countToDoTasks() {
-        System.out.println();
         System.out.println("=== Count To-Do Tasks ===");
-
         int toDoTaskCount = taskManager.countToDoTasks();
-
         System.out.println("Number of to-do tasks: " + toDoTaskCount);
     }
 
     private void countDoingTasks() {
-        System.out.println();
         System.out.println("=== Count Doing Tasks ===");
-
         int doingTaskCount = taskManager.countDoingTasks();
-
         System.out.println("Number of tasks in progress: " + doingTaskCount);
     }
 
-    private static void checkAlarms(TaskManager taskManager) {
+    private static void checkAlarms(TaskService taskManager) {
         List<Task> tasksWithAlarms = taskManager.getTasksWithAlarms();
         LocalDateTime now = LocalDateTime.now();
 

@@ -1,11 +1,8 @@
 package todo.list.service;
 
-
-
 import todo.list.entity.Task;
-import todo.list.interfaces.FileUtil;
-import todo.list.interfaces.TaskInterface;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -13,24 +10,30 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+public class TaskService implements ITaskService {
+        public List<Task> tasks;
+        private IFileService fileUtil;
 
-public class TaskManager implements TaskInterface {
-    public List<Task> tasks;
-
-    private FileUtil fileUtil;
-
-    public TaskManager(FileUtil fileUtil) {
+    public TaskService(IFileService fileUtil) {
         tasks = new ArrayList<>();
         this.fileUtil = fileUtil;
         loadDataFromFile();
     }
 
-    public void loadDataFromFile() {
-        tasks = fileUtil.loadTasks();
+    public void loadDataFromFile()  {
+        try {
+            tasks = fileUtil.loadTasks();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void saveDataToFile() {
-        fileUtil.saveTasks(tasks);
+        try {
+            fileUtil.saveTasks(tasks);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
@@ -146,7 +149,6 @@ public class TaskManager implements TaskInterface {
                 .filter(task -> task.getDeadline().toLocalDate().isEqual(date))
                 .collect(Collectors.toList());
     }
-
 
     public List<Task> getTasksWithAlarms() {
         List<Task> tasksWithAlarms = new ArrayList<>();
