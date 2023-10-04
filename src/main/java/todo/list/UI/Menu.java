@@ -2,13 +2,11 @@ package todo.list.UI;
 
 
 import todo.list.entity.Task;
-import todo.list.service.TaskService;
+import todo.list.service.task.TaskService;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 

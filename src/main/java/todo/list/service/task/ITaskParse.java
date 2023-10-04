@@ -1,4 +1,4 @@
-package todo.list.service;
+package todo.list.service.task;
 
 import todo.list.entity.Task;
 

@@ -19,7 +19,8 @@ public class Task {
             LocalDateTime deadline,
             Integer priority,
             Category category,
-            TaskStatus status
+            TaskStatus status,
+            List<Alarm> alarms
     ) {
         this.name = name;
         this.description = description;
@@ -27,8 +28,34 @@ public class Task {
         this.priority = priority;
         this.category = category;
         this.status = status;
-        this.alarms = new ArrayList<>();
+        this.alarms = alarms;
+    }
+    public String getName() {
+        return name;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public LocalDateTime getDeadline() {
+        return deadline;
+    }
+
+    public Integer getPriority() {
+        return priority;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public TaskStatus getStatus() {
+        return status;
+    }
+
+    public List<Alarm> getAlarms() {
+        return alarms;
+    }
 
 }
