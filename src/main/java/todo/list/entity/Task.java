@@ -8,13 +8,19 @@ public class Task {
     private String name;
     private String description;
     private LocalDateTime deadline;
-    private int priority;
-    private String category;
-    private String status;
-    private List<LocalDateTime>  alarms;
+    private Integer priority;
+    private Category category;
+    private TaskStatus status;
+    private List<Alarm> alarms;
 
-
-    public Task(String name, String description, LocalDateTime deadline, int priority, String category, String status) {
+    public Task(
+            String name,
+            String description,
+            LocalDateTime deadline,
+            Integer priority,
+            Category category,
+            TaskStatus status
+    ) {
         this.name = name;
         this.description = description;
         this.deadline = deadline;
@@ -24,69 +30,5 @@ public class Task {
         this.alarms = new ArrayList<>();
     }
 
-    public boolean hasAlarms() {
-        return !alarms.isEmpty();
-    }
 
-    public void addAlarm(LocalDateTime alarmDateTime) {
-        alarms.add(alarmDateTime);
-    }
-
-    public List<LocalDateTime> getAlarms() {
-        return alarms;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public LocalDateTime getDeadline() {
-        return deadline;
-    }
-
-    public void setDeadline(LocalDateTime deadline) {
-        this.deadline = deadline;
-    }
-
-    public int getPriority() {
-        return priority;
-    }
-
-    public void setPriority(int priority) {
-        this.priority = priority;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    @Override
-    public String toString() {
-        return "Name: " + name +
-                "\nDescription: " + description +
-                "\nDeadline: " + deadline +
-                "\nPriority: " + priority +
-                "\nCategory: " + category +
-                "\nStatus: " + status;
-    }
 }
