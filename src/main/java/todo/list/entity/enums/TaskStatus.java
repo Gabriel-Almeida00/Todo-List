@@ -1,4 +1,4 @@
-package todo.list.entity;
+package todo.list.entity.enums;
 
 public enum TaskStatus {
     TODO,

@@ -1,5 +1,7 @@
 package todo.list.entity;
 
+import todo.list.entity.enums.AlarmType;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +15,23 @@ public class Alarm {
         this.alarmTime = alarmTime;
         this.description = description;
         this.alarmPeriodMinutes = alarmPeriodMinutes;
+    }
+
+    public AlarmType getAlarmType() {
+        if (alarmTime != null) {
+            LocalDateTime now = LocalDateTime.now();
+            LocalDateTime alarmTimeMinusPeriod = alarmTime.minusMinutes(alarmPeriodMinutes);
+
+            boolean isAlarmTimeMinusPeriod = now.isEqual(alarmTimeMinusPeriod);
+            boolean isAlarmTime = now.isEqual(alarmTime);
+
+            if (isAlarmTimeMinusPeriod) {
+                return AlarmType.ALARM_ANTICIPATED;
+            } else if (isAlarmTime) {
+                return AlarmType.ALARM;
+            }
+        }
+        return null;
     }
 
     public LocalDateTime getAlarmTime() {

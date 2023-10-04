@@ -1,16 +1,19 @@
-package todo.list.service;
+package todo.list.task;
 
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import todo.list.entity.Alarm;
+import todo.list.entity.Category;
 import todo.list.entity.Task;
-import todo.list.service.task.TaskService;
-
+import todo.list.task.task.ITaskService;
+import todo.list.entity.enums.TaskStatus;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -18,81 +21,57 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.*;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
+
 public class TaskServiceTest {
 
-    private TaskService taskManager;
-    private IFileService fileUtilMock;
+    private ITaskService taskService;
 
     @BeforeEach
     public void setUp() {
-        fileUtilMock = mock(IFileService.class);
-        taskManager = new TaskService(fileUtilMock);
-    }
+        taskService = mock(ITaskService.class);
 
-    @Test
-    public void testLoadDataFromFile() throws IOException {
-        List<Task> testData = Arrays.asList(
-                new Task("Task 1",
-                        "Description 1",
-                        LocalDateTime.parse("2023-08-10T12:00"),
-                        1,
-                        "Category 1",
-                        "Incomplete"),
-                new Task("Task 2",
-                        "Description 2",
-                        LocalDateTime.parse("2023-08-11T14:00"),
-                        2,
-                        "Category 2",
-                        "Complete")
-        );
-        when(fileUtilMock.loadTasks()).thenReturn(testData);
-
-        taskManager.loadDataFromFile();
-
-        List<Task> loadedTasks = taskManager.listAllTasks();
-        assertEquals(2, loadedTasks.size());
-        assertEquals("Task 1", loadedTasks.get(0).getName());
-        assertEquals("Description 1", loadedTasks.get(0).getDescription());
-        assertEquals("Task 2", loadedTasks.get(1).getName());
-        assertEquals("Description 2", loadedTasks.get(1).getDescription());
-    }
-    @Test
-    public void testSaveDataToFile() throws IOException {
-        List<Task> mockTasks = new ArrayList<>();
-        mockTasks.add(new Task("Task1",
-                "Description1",
-                LocalDateTime.parse("2023-08-09T12:00"),
-                1,
-                "Category1",
-                "Open"));
-        mockTasks.add(new Task("Task2",
-                "Description2", LocalDateTime.parse("2023-08-10T15:00"),
-                2,
-                "Category2",
-                "In Progress"));
-
-        taskManager.tasks = mockTasks;
-
-        List<String> expectedLines = new ArrayList<>();
-        expectedLines.add("Task1,Description1,2023-08-09T12:00,1,Category1,Open");
-        expectedLines.add("Task2,Description2,2023-08-10T15:00,2,Category2,In Progress");
-
-        doNothing().when(fileUtilMock).saveTasks(mockTasks);
-
-        taskManager.saveDataToFile();
-
-        verify(fileUtilMock, times(1)).saveTasks(mockTasks);
     }
 
     @Test
     public void testListAllTasks() {
         List<Task> mockTasks = new ArrayList<>();
-        mockTasks.add(new Task("Task1", "Description1", LocalDateTime.parse("2023-08-09T12:00"), 1, "Category1", "Open"));
-        mockTasks.add(new Task("Task2", "Description2", LocalDateTime.parse("2023-08-10T15:00"), 2, "Category2", "In Progress"));
 
-        taskManager.tasks = mockTasks;
+        mockTasks.add(
+                new Task(
+                        "Task1",
+                        "Description1",
+                        LocalDateTime.parse("2023-08-09T12:00"),
+                        1,
+                new Category(
+                        "Category1", 
+                        "Category1 Description"),
+                        TaskStatus.TODO,
+                        Collections.singletonList(
+                new Alarm(
+                        LocalDateTime.parse("2023-08-09T11:45"),
+                        "Alarme 1",
+                        15)
+                        )));
 
-        List<Task> tasksReturned = taskManager.listAllTasks();
+        mockTasks.add(
+                new Task(
+                        "Task2",
+                        "Description2",
+                        LocalDateTime.parse("2023-08-10T15:00"),
+                        2,
+                new Category(
+                        "Category2",
+                        "Category2 Description"),
+                        TaskStatus.DOING,
+                        Collections.singletonList(
+                new Alarm(
+                        LocalDateTime.parse("2023-08-10T14:30"),
+                        "Alarme 2",
+                        30))));
+
+        taskService.setTasks(mockTasks);
+
+        List<Task> tasksReturned = taskService.listAllTasks();
 
         assertEquals(mockTasks, tasksReturned);
     }

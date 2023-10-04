@@ -2,7 +2,7 @@ package todo.list.UI;
 
 
 import todo.list.entity.Task;
-import todo.list.service.task.TaskService;
+import todo.list.task.task.TaskService;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

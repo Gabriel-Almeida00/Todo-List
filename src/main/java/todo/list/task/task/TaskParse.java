@@ -1,10 +1,9 @@
-package todo.list.service.task;
+package todo.list.task.task;
 
-import org.checkerframework.checker.units.qual.C;
 import todo.list.entity.Alarm;
 import todo.list.entity.Category;
 import todo.list.entity.Task;
-import todo.list.entity.TaskStatus;
+import todo.list.entity.enums.TaskStatus;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
