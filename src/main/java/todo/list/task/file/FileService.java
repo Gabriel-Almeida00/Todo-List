@@ -2,17 +2,17 @@ package todo.list.task.file;
 
 
 import todo.list.entity.Task;
-import todo.list.task.task.TaskParse;
+import todo.list.task.task.TaskParseService;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class FileService implements IFileService {
-    private String fileName;
-    private TaskParse taskParser;
+    private final String fileName;
+    private final TaskParseService taskParser;
 
-    public FileService(String fileName, TaskParse taskParser) {
+    public FileService(String fileName, TaskParseService taskParser) {
         this.fileName = fileName;
         this.taskParser = taskParser;
     }

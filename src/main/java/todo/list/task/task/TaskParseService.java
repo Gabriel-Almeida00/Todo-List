@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TaskParse implements ITaskParse {
+public class TaskParseService implements ITaskParseService {
     public  final int NUM_FIELDS = 8;
 
     @Override
