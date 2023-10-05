@@ -8,7 +8,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface ITaskService {
-      void setTasks(List<Task> tasks);
      List<Task> listAllTasks();
      void addTaskWithPriorityRebalance(Task task);
      void updateTask(Task task);

@@ -114,7 +114,8 @@ public class Menu {
         System.out.print("Hora de término (formato: HH:mm): ");
         String deadlineTimeInput = scanner.nextLine();
 
-        LocalDateTime deadline = LocalDateTime.parse(deadlineDateInput + " " + deadlineTimeInput, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+        LocalDateTime deadline = LocalDateTime.parse(
+                deadlineDateInput + " " + deadlineTimeInput, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
 
         System.out.print("Nível de prioridade (1 a 5): ");
         int priority = scanner.nextInt();
@@ -126,7 +127,7 @@ public class Menu {
         System.out.print("Status (todo, doing, done): ");
         String status = scanner.nextLine().toLowerCase();
 
-        Task newTask = new Task(name, description, deadline, priority, category, status);
+        //Task newTask = new Task(name, description, deadline, priority, category, status);
 
         System.out.print("Deseja habilitar o alarme? (S/N): ");
         String enableAlarmChoice = scanner.nextLine();
@@ -137,9 +138,9 @@ public class Menu {
             int alarmPeriodMinutes = scanner.nextInt();
             scanner.nextLine();
 
-            taskManager.addTaskWithPriorityRebalance(newTask, enableAlarm, alarmPeriodMinutes);
+            //taskManager.addTaskWithPriorityRebalance(newTask, enableAlarm, alarmPeriodMinutes);
         } else {
-            taskManager.addTaskWithPriorityRebalance(newTask, false, 0);
+           // taskManager.addTaskWithPriorityRebalance(newTask, false, 0);
         }
     }
 
@@ -181,8 +182,8 @@ public class Menu {
         int alarmPeriodMinutes = scanner.nextInt();
         scanner.nextLine();
 
-        Task newTask = new Task(name, newDescripton, deadline, newPriority, newCategory, newStatus);
-        taskManager.updateTask(newTask, enableAlarm, alarmPeriodMinutes);
+       // Task newTask = new Task(name, newDescripton, deadline, newPriority, newCategory, newStatus);
+       // taskManager.updateTask(newTask, enableAlarm, alarmPeriodMinutes);
         System.out.println("Tarefa atualizada com sucesso!");
     }
 
@@ -245,12 +246,12 @@ public class Menu {
         System.out.print("Informe o status (todo, doing, done): ");
         String status = scanner.nextLine().trim().toLowerCase();
 
-        List<Task> filteredTasks = taskManager.getTasksByStatus(status);
+        //List<Task> filteredTasks = taskManager.getTasksByStatus(status);
         System.out.println("Tarefas com status '" + status + "':");
-        for (Task task : filteredTasks) {
-            System.out.println(task);
+        //for (Task task : filteredTasks) {
+        //    System.out.println(task);
         }
-    }
+    //}
 
     private void countCompletedTasks() {
         System.out.println("=== Count Completed Tasks ===");
@@ -271,7 +272,7 @@ public class Menu {
     }
 
     private static void checkAlarms(TaskService taskManager) {
-        List<Task> tasksWithAlarms = taskManager.getTasksWithAlarms();
+      /*  List<Task> tasksWithAlarms = taskManager.getTasksWithAlarms();
         LocalDateTime now = LocalDateTime.now();
 
         for (Task task : tasksWithAlarms) {
@@ -281,7 +282,7 @@ public class Menu {
                     System.out.println("ALERTA: Tarefa '" + task.getName() + "' com alarme para " + alarmDateTime);
                 }
             }
-        }
+        }*/
     }
 
     private int readIntInput(String message) {

@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 public class TaskService implements ITaskService {
     public List<Task> tasks;
-        private IFileService fileUtil;
+    private IFileService fileUtil;
 
     public TaskService(IFileService fileUtil) {
         tasks = new ArrayList<>();
@@ -20,7 +20,7 @@ public class TaskService implements ITaskService {
         loadDataFromFile();
     }
 
-    public void loadDataFromFile()  {
+    public void loadDataFromFile() {
         try {
             tasks = fileUtil.loadTasks();
         } catch (IOException e) {
@@ -36,11 +36,7 @@ public class TaskService implements ITaskService {
         }
     }
 
-    public void setTasks(List<Task> tasks) {
-        this.tasks = tasks;
-    }
-
-    public List<Task> listAllTasks(){
+    public List<Task> listAllTasks() {
         return tasks;
     }
 
@@ -53,7 +49,6 @@ public class TaskService implements ITaskService {
     public void updateTask(Task updatedTask) {
         for (Task task : tasks) {
             if (task.getName().equalsIgnoreCase(updatedTask.getName())) {
-                task.setName(updatedTask.getName());
                 task.setDescription(updatedTask.getDescription());
                 task.setDeadline(updatedTask.getDeadline());
                 task.setPriority(updatedTask.getPriority());
@@ -61,6 +56,7 @@ public class TaskService implements ITaskService {
                 task.setStatus(updatedTask.getStatus());
                 task.setAlarms(updatedTask.getAlarms());
                 saveDataToFile();
+                return;
             }
         }
     }
@@ -108,7 +104,7 @@ public class TaskService implements ITaskService {
     public int countToDoTasks() {
         int count = 0;
         for (Task task : tasks) {
-            if (task.getStatus()== TaskStatus.TODO) {
+            if (task.getStatus() == TaskStatus.TODO) {
                 count++;
             }
         }
@@ -118,7 +114,7 @@ public class TaskService implements ITaskService {
     public int countDoingTasks() {
         int count = 0;
         for (Task task : tasks) {
-            if (task.getStatus()== TaskStatus.DOING) {
+            if (task.getStatus() == TaskStatus.DOING) {
                 count++;
             }
         }
