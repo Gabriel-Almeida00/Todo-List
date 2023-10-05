@@ -1,8 +1,8 @@
-package todo.list.service;
+package todo.list.task.task;
 
 import todo.list.entity.Task;
 
-public interface ITaskParse {
+public interface ITaskParseService {
     Task fromStringArray(String[] parts);
     String[] toStringArray(Task task);
 }

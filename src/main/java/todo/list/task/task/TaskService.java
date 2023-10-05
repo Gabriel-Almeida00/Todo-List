@@ -1,18 +1,18 @@
-package todo.list.service;
+package todo.list.task.task;
 
 import todo.list.entity.Task;
+import todo.list.entity.enums.TaskStatus;
+import todo.list.task.file.IFileService;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class TaskService implements ITaskService {
-        public List<Task> tasks;
-        private IFileService fileUtil;
+    public List<Task> tasks;
+    private IFileService fileUtil;
 
     public TaskService(IFileService fileUtil) {
         tasks = new ArrayList<>();
@@ -20,7 +20,7 @@ public class TaskService implements ITaskService {
         loadDataFromFile();
     }
 
-    public void loadDataFromFile()  {
+    public void loadDataFromFile() {
         try {
             tasks = fileUtil.loadTasks();
         } catch (IOException e) {
@@ -36,25 +36,17 @@ public class TaskService implements ITaskService {
         }
     }
 
-
-    public List<Task> listAllTasks(){
+    public List<Task> listAllTasks() {
         return tasks;
     }
 
-    public void addTaskWithPriorityRebalance(Task task, boolean enableAlarm, int alarmPeriodMinutes) {
+    public void addTaskWithPriorityRebalance(Task task) {
         tasks.add(task);
-
-        Collections.sort(tasks, (t1, t2) -> Integer.compare(t2.getPriority(), t1.getPriority()));
-
+        tasks.sort((t1, t2) -> Integer.compare(t2.getPriority(), t1.getPriority()));
         saveDataToFile();
-
-        if (enableAlarm) {
-            LocalDateTime alarmDateTime = task.getDeadline().minusMinutes(alarmPeriodMinutes);
-            task.addAlarm(alarmDateTime);
-        }
     }
 
-    public void updateTask(Task updatedTask, boolean enableAlarm, int alarmPeriodMinutes) {
+    public void updateTask(Task updatedTask) {
         for (Task task : tasks) {
             if (task.getName().equalsIgnoreCase(updatedTask.getName())) {
                 task.setDescription(updatedTask.getDescription());
@@ -62,47 +54,37 @@ public class TaskService implements ITaskService {
                 task.setPriority(updatedTask.getPriority());
                 task.setCategory(updatedTask.getCategory());
                 task.setStatus(updatedTask.getStatus());
+                task.setAlarms(updatedTask.getAlarms());
                 saveDataToFile();
-
-                if (enableAlarm) {
-                    LocalDateTime alarmDateTime = updatedTask.getDeadline().minusMinutes(alarmPeriodMinutes);
-                    task.getAlarms().clear();
-                    task.addAlarm(alarmDateTime);
-                } else {
-                    task.getAlarms().clear();
-                }
-
                 return;
             }
         }
-        System.out.println("Tarefa não encontrada.");
     }
 
-
-    public List<Task> getTasksByCategory(String category) {
+    public List<Task> getTasksByCategory(String categoryName) {
         List<Task> filteredTasks = new ArrayList<>();
         for (Task task : tasks) {
-            if (task.getCategory().equalsIgnoreCase(category)) {
+            if (task.getCategory().getName().equalsIgnoreCase(categoryName)) {
                 filteredTasks.add(task);
             }
         }
         return filteredTasks;
     }
 
-    public List<Task> getTasksByPriority(int priority) {
+    public List<Task> getTasksByPriority(Integer priority) {
         List<Task> filteredTasks = new ArrayList<>();
         for (Task task : tasks) {
-            if (task.getPriority() == priority) {
+            if (task.getPriority().equals(priority)) {
                 filteredTasks.add(task);
             }
         }
         return filteredTasks;
     }
 
-    public List<Task> getTasksByStatus(String status) {
+    public List<Task> getTasksByStatus(TaskStatus status) {
         List<Task> filteredTasks = new ArrayList<>();
         for (Task task : tasks) {
-            if (task.getStatus().equalsIgnoreCase(status)) {
+            if (task.getStatus() == status) {
                 filteredTasks.add(task);
             }
         }
@@ -112,7 +94,7 @@ public class TaskService implements ITaskService {
     public int countCompletedTasks() {
         int count = 0;
         for (Task task : tasks) {
-            if (task.getStatus().equalsIgnoreCase("done")) {
+            if (task.getStatus() == TaskStatus.DONE) {
                 count++;
             }
         }
@@ -122,7 +104,7 @@ public class TaskService implements ITaskService {
     public int countToDoTasks() {
         int count = 0;
         for (Task task : tasks) {
-            if (task.getStatus().equalsIgnoreCase("todo")) {
+            if (task.getStatus() == TaskStatus.TODO) {
                 count++;
             }
         }
@@ -132,7 +114,7 @@ public class TaskService implements ITaskService {
     public int countDoingTasks() {
         int count = 0;
         for (Task task : tasks) {
-            if (task.getStatus().equalsIgnoreCase("doing")) {
+            if (task.getStatus() == TaskStatus.DOING) {
                 count++;
             }
         }

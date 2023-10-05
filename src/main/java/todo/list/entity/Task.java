@@ -1,39 +1,60 @@
 package todo.list.entity;
 
+import todo.list.entity.enums.TaskStatus;
+
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Task {
     private String name;
     private String description;
     private LocalDateTime deadline;
-    private int priority;
-    private String category;
-    private String status;
-    private List<LocalDateTime>  alarms;
+    private Integer priority;
+    private Category category;
+    private TaskStatus status;
+    private List<Alarm> alarms;
 
-
-    public Task(String name, String description, LocalDateTime deadline, int priority, String category, String status) {
+    public Task(
+            String name,
+            String description,
+            LocalDateTime deadline,
+            Integer priority,
+            Category category,
+            TaskStatus status,
+            List<Alarm> alarms
+    ) {
         this.name = name;
         this.description = description;
         this.deadline = deadline;
         this.priority = priority;
         this.category = category;
         this.status = status;
-        this.alarms = new ArrayList<>();
+        this.alarms = alarms;
     }
 
-    public boolean hasAlarms() {
-        return !alarms.isEmpty();
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public void addAlarm(LocalDateTime alarmDateTime) {
-        alarms.add(alarmDateTime);
+    public void setDeadline(LocalDateTime deadline) {
+        this.deadline = deadline;
     }
 
-    public List<LocalDateTime> getAlarms() {
-        return alarms;
+    public void setPriority(Integer priority) {
+        this.priority = priority;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public void setStatus(TaskStatus status) {
+        this.status = status;
+    }
+
+    public void setAlarms(List<Alarm> alarms) {
+        this.alarms = alarms;
     }
 
     public String getName() {
@@ -44,49 +65,26 @@ public class Task {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public LocalDateTime getDeadline() {
         return deadline;
     }
 
-    public void setDeadline(LocalDateTime deadline) {
-        this.deadline = deadline;
-    }
-
-    public int getPriority() {
+    public Integer getPriority() {
         return priority;
     }
 
-    public void setPriority(int priority) {
-        this.priority = priority;
-    }
-
-    public String getCategory() {
+    public Category getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public String getStatus() {
+    public TaskStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public List<Alarm> getAlarms() {
+        return alarms;
     }
-
-    @Override
-    public String toString() {
-        return "Name: " + name +
-                "\nDescription: " + description +
-                "\nDeadline: " + deadline +
-                "\nPriority: " + priority +
-                "\nCategory: " + category +
-                "\nStatus: " + status;
+    public boolean hasAlarms() {
+        return !alarms.isEmpty();
     }
 }
