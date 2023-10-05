@@ -6,12 +6,11 @@ import todo.list.entity.Task;
 import todo.list.entity.enums.TaskStatus;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TaskParseService implements ITaskParseService {
-    public  final int NUM_FIELDS = 8;
+    public  final int NUM_FIELDS = 10;
 
     @Override
     public Task fromStringArray(String[] parts) {
@@ -27,28 +26,19 @@ public class TaskParseService implements ITaskParseService {
         String categoryDescription = parts[5].trim();
         TaskStatus status = TaskStatus.valueOf(parts[6].trim().toUpperCase());
 
-        String alarmString = parts[7].trim();
-        String[] alarmParts = alarmString.split(",");
-        List<Alarm> alarms = parseAlarms(alarmParts);
+        LocalDateTime alarmTime = LocalDateTime.parse(parts[7].trim());
+        String descriptionAlarm = parts[8].trim();
+        Integer alarmPeriodMinutes = Integer.parseInt(parts[9].trim());
+
+        Alarm alarm = new Alarm(alarmTime, descriptionAlarm, alarmPeriodMinutes);
+        List<Alarm> alarms = new ArrayList<>();
+        alarms.add(alarm);
 
         Category category = new Category(categoryName, categoryDescription);
 
         return new Task(name, description, deadline, priority, category, status, alarms);
     }
 
-    private List<Alarm> parseAlarms(String[] alarmParts) {
-        List<Alarm> alarms = new ArrayList<>();
-
-        for (int i = 0; i < alarmParts.length - 2; i += 3) {
-            LocalDateTime alarmTime = LocalDateTime.parse(alarmParts[i].trim(), DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
-            String alarmDescription = alarmParts[i + 1].trim();
-            int alarmPeriodMinutes = Integer.parseInt(alarmParts[i + 2].trim());
-
-            Alarm alarm = new Alarm(alarmTime, alarmDescription, alarmPeriodMinutes);
-            alarms.add(alarm);
-        }
-        return alarms;
-    }
 
 
     @Override
@@ -61,23 +51,14 @@ public class TaskParseService implements ITaskParseService {
         parts[4] = task.getCategory().getName();
         parts[5] = task.getCategory().getDescription();
         parts[6] = task.getStatus().toString();
-        parts[7] = formatAlarms(task.getAlarms());
+
+        for (Alarm alarm : task.getAlarms()) {
+            parts[7] = alarm.getAlarmTime().toString();
+            parts[8] = alarm.getDescription();
+            parts[9] = String.valueOf(alarm.getAlarmPeriodMinutes());
+        }
+
 
         return parts;
     }
-
-    private String formatAlarms(List<Alarm> alarms) {
-        StringBuilder sb = new StringBuilder();
-
-        for (Alarm alarm : alarms) {
-            LocalDateTime alarmTime = alarm.getAlarmTime();
-            String alarmTimeString = alarmTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
-            sb.append(alarmTimeString).append(",");
-            sb.append(alarm.getDescription()).append(",");
-            sb.append(alarm.getAlarmPeriodMinutes()).append(",");
-        }
-
-        return sb.toString();
-    }
-
 }
