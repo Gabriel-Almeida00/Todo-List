@@ -1,21 +1,26 @@
 package todo.list.UI;
 
 
+import todo.list.entity.Alarm;
+import todo.list.entity.Category;
 import todo.list.entity.Task;
+import todo.list.entity.enums.AlarmType;
+import todo.list.entity.enums.TaskStatus;
 import todo.list.task.task.TaskService;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class Menu {
-    private TaskService taskManager;
-    private Scanner scanner;
+    private final TaskService taskService;
+    private final Scanner scanner;
 
-    public Menu(TaskService taskManager) {
-        this.taskManager = taskManager;
+    public Menu(TaskService taskService) {
+        this.taskService = taskService;
         this.scanner = new Scanner(System.in);
     }
 
@@ -37,7 +42,7 @@ public class Menu {
             System.out.println("11. Contar Tarefas em Andamento");
             System.out.println("12. Exit");
 
-            int choice = readIntInput("Enter your choice: ");
+            int choice = readIntInput();
 
             switch (choice) {
                 case 1:
@@ -85,27 +90,42 @@ public class Menu {
     }
 
     private void listAllTasks() {
-        System.out.println();
-        List<Task> tasks = taskManager.listAllTasks();
+        checkAlarms(taskService);
+        List<Task> tasks = taskService.listAllTasks();
         if (tasks.isEmpty()) {
             System.out.println("No tasks found.");
         } else {
             System.out.println("=== All Tasks ===");
             for (Task task : tasks) {
-                System.out.println();
-                System.out.println(task);
+                System.out.println("Name: " + task.getName());
+                System.out.println("Description: " + task.getDescription());
+                System.out.println("Deadline: " + task.getDeadline());
+                System.out.println("Priority: " + task.getPriority());
+                System.out.println("Name Category: " + task.getCategory().getName());
+                System.out.println("Description Category: " + task.getCategory().getDescription());
+                System.out.println("Status: " + task.getStatus());
+
+                List<Alarm> alarms = task.getAlarms();
+                if (!alarms.isEmpty()) {
+                    System.out.println("Alarms:");
+                    for (Alarm alarm : alarms) {
+                        System.out.println("  - Alarm Time: " + alarm.getAlarmTime());
+                        System.out.println("    Description: " + alarm.getDescription());
+                        System.out.println("    Alarm Period (minutes): " + alarm.getAlarmPeriodMinutes());
+                    }
+                }
                 System.out.println();
             }
         }
     }
 
-    private void addTask() {
-        checkAlarms(taskManager);
+    private Task createTask() {
+        System.out.println();
         System.out.println("=== Add Task ===");
         System.out.print("Nome (mínimo 3 caracteres): ");
         String name = scanner.nextLine();
 
-        System.out.print("Descrição(mínimo 3 caracteres): ");
+        System.out.print("Descrição (mínimo 3 caracteres): ");
         String description = scanner.nextLine();
 
         System.out.print("Data de término (formato: dd/MM/yyyy): ");
@@ -118,41 +138,57 @@ public class Menu {
                 deadlineDateInput + " " + deadlineTimeInput, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
 
         System.out.print("Nível de prioridade (1 a 5): ");
-        int priority = scanner.nextInt();
+        Integer priority = scanner.nextInt();
         scanner.nextLine();
 
-        System.out.print("Categoria(mínimo 3 caracteres): ");
-        String category = scanner.nextLine();
+        System.out.print("Nome da Categoria (mínimo 3 caracteres): ");
+        String categoryName = scanner.nextLine();
 
-        System.out.print("Status (todo, doing, done): ");
-        String status = scanner.nextLine().toLowerCase();
+        System.out.print("Descrição da Categoria (mínimo 3 caracteres): ");
+        String categoryDescription = scanner.nextLine();
 
-        //Task newTask = new Task(name, description, deadline, priority, category, status);
+        System.out.print("Status (TODO, DOING, DONE): ");
+        String statusInput = scanner.nextLine().toUpperCase();
+        TaskStatus status = TaskStatus.valueOf(statusInput);
 
-        System.out.print("Deseja habilitar o alarme? (S/N): ");
+        System.out.print("Deseja adicionar um alarme? (S/N): ");
         String enableAlarmChoice = scanner.nextLine();
-        boolean enableAlarm = enableAlarmChoice.equalsIgnoreCase("S");
 
-        if (enableAlarm) {
+        List<Alarm> alarms = new ArrayList<>();
+
+        if (enableAlarmChoice.equalsIgnoreCase("S")) {
+            System.out.print("Digite a data e hora do alarme (formato: dd/MM/yyyy HH:mm): ");
+            String alarmTimeInput = scanner.nextLine();
+            LocalDateTime alarmTime = LocalDateTime.parse(alarmTimeInput, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+
+            System.out.print("Descrição do alarme: ");
+            String alarmDescription = scanner.nextLine();
+
             System.out.print("Digite o período de antecedência do alarme (em minutos): ");
             int alarmPeriodMinutes = scanner.nextInt();
             scanner.nextLine();
 
-            //taskManager.addTaskWithPriorityRebalance(newTask, enableAlarm, alarmPeriodMinutes);
-        } else {
-           // taskManager.addTaskWithPriorityRebalance(newTask, false, 0);
+            Alarm alarm = new Alarm(alarmTime, alarmDescription, alarmPeriodMinutes);
+            alarms.add(alarm);
         }
+        Category category = new Category(categoryName, categoryDescription);
+        return new Task(
+                name, description, deadline, priority, category, status, alarms
+        );
+    }
+
+    private void addTask() {
+        Task task = createTask();
+        taskService.addTaskWithPriorityRebalance(task);
     }
 
     public void updateTask() {
-        System.out.println("=== Update Task with Alarm ===");
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.print("Digite o nome da tarefa que deseja atualizar: ");
+        System.out.println("=== Update Task ===");
+        System.out.print("Nome (mínimo 3 caracteres): ");
         String name = scanner.nextLine();
 
-        System.out.print("Nova descrição: ");
-        String newDescripton = scanner.nextLine();
+        System.out.print("Descrição (mínimo 3 caracteres): ");
+        String description = scanner.nextLine();
 
         System.out.print("Data de término (formato: dd/MM/yyyy): ");
         String deadlineDateInput = scanner.nextLine();
@@ -161,43 +197,58 @@ public class Menu {
         String deadlineTimeInput = scanner.nextLine();
 
         LocalDateTime deadline = LocalDateTime.parse(
-                deadlineDateInput + " " + deadlineTimeInput, DateTimeFormatter
-                        .ofPattern("dd/MM/yyyy HH:mm"));
+                deadlineDateInput + " " + deadlineTimeInput, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
 
-        System.out.print("Nova prioridade (1 a 5): ");
-        int newPriority = scanner.nextInt();
+        System.out.print("Nível de prioridade (1 a 5): ");
+        Integer priority = scanner.nextInt();
         scanner.nextLine();
 
-        System.out.print("Nova categoria: ");
-        String newCategory = scanner.nextLine();
+        System.out.print("Nome da Categoria (mínimo 3 caracteres): ");
+        String categoryName = scanner.nextLine();
 
-        System.out.print("Novo status (todo, doing, done): ");
-        String newStatus = scanner.nextLine().toLowerCase();
+        System.out.print("Descrição da Categoria (mínimo 3 caracteres): ");
+        String categoryDescription = scanner.nextLine();
 
-        System.out.print("Deseja habilitar o alarme? (S/N): ");
+        System.out.print("Status (TODO, DOING, DONE): ");
+        String statusInput = scanner.nextLine().toUpperCase();
+        TaskStatus status = TaskStatus.valueOf(statusInput);
+
+        System.out.print("Deseja adicionar um alarme? (S/N): ");
         String enableAlarmChoice = scanner.nextLine();
-        boolean enableAlarm = enableAlarmChoice.equalsIgnoreCase("S");
 
-        System.out.print("Período do alarme em minutos (maior que 0): ");
-        int alarmPeriodMinutes = scanner.nextInt();
-        scanner.nextLine();
+        List<Alarm> alarms = new ArrayList<>();
 
-       // Task newTask = new Task(name, newDescripton, deadline, newPriority, newCategory, newStatus);
-       // taskManager.updateTask(newTask, enableAlarm, alarmPeriodMinutes);
-        System.out.println("Tarefa atualizada com sucesso!");
+        if (enableAlarmChoice.equalsIgnoreCase("S")) {
+            System.out.print("Digite a data e hora do alarme (formato: dd/MM/yyyy HH:mm): ");
+            String alarmTimeInput = scanner.nextLine();
+            LocalDateTime alarmTime = LocalDateTime.parse(alarmTimeInput, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+
+            System.out.print("Descrição do alarme: ");
+            String alarmDescription = scanner.nextLine();
+
+            System.out.print("Digite o período de antecedência do alarme (em minutos): ");
+            int alarmPeriodMinutes = scanner.nextInt();
+            scanner.nextLine();
+
+            Alarm alarm = new Alarm(alarmTime, alarmDescription, alarmPeriodMinutes);
+            alarms.add(alarm);
+        }
+        Category category = new Category(categoryName, categoryDescription);
+        Task task = new Task(name, description, deadline, priority, category, status, alarms);
+
+        taskService.updateTask(task);
     }
 
     private void deleteTask() {
         System.out.println("=== Delete Task ===");
-
         System.out.print("Nome da Task: ");
-        String taskName = scanner.nextLine();
 
-        List<Task> tasks = taskManager.listAllTasks();
+        String taskName = scanner.nextLine();
+        List<Task> tasks = taskService.listAllTasks();
 
         for (Task task : tasks) {
             if (task.getName().equalsIgnoreCase(taskName)) {
-                taskManager.deleteTask(taskName);
+                taskService.deleteTask(taskName);
                 System.out.println("Task '" + taskName + "' has been deleted.");
 
             }
@@ -210,7 +261,7 @@ public class Menu {
         String dateString = scanner.nextLine();
 
         LocalDate date = LocalDate.parse(dateString, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-        List<Task> filteredTasks = taskManager.filterTasksByDate(date);
+        List<Task> filteredTasks = taskService.filterTasksByDate(date);
 
         for (Task task : filteredTasks) {
             System.out.println(task);
@@ -219,10 +270,10 @@ public class Menu {
 
     private void getTasksByCategory() {
         System.out.println("=== Get Tasks by Category ===");
-        System.out.print("Informe a categoria: ");
+        System.out.print("Informe o nome da categoria: ");
         String category = scanner.nextLine();
 
-        List<Task> filteredTasks = taskManager.getTasksByCategory(category);
+        List<Task> filteredTasks = taskService.getTasksByCategory(category);
         for (Task task : filteredTasks) {
             System.out.println(task);
         }
@@ -235,7 +286,7 @@ public class Menu {
         int priority = scanner.nextInt();
         scanner.nextLine();
 
-        List<Task> filteredTasks = taskManager.getTasksByPriority(priority);
+        List<Task> filteredTasks = taskService.getTasksByPriority(priority);
         for (Task task : filteredTasks) {
             System.out.println(task);
         }
@@ -243,58 +294,62 @@ public class Menu {
 
     private void getTasksByStatus() {
         System.out.println("=== Get Tasks by Status ===");
-        System.out.print("Informe o status (todo, doing, done): ");
-        String status = scanner.nextLine().trim().toLowerCase();
+        System.out.print("Status (TODO, DOING, DONE): ");
+        String statusInput = scanner.nextLine().toUpperCase();
+        TaskStatus status = TaskStatus.valueOf(statusInput);
 
-        //List<Task> filteredTasks = taskManager.getTasksByStatus(status);
+        List<Task> filteredTasks = taskService.getTasksByStatus(status);
         System.out.println("Tarefas com status '" + status + "':");
-        //for (Task task : filteredTasks) {
-        //    System.out.println(task);
+        for (Task task : filteredTasks) {
+            System.out.println(task);
         }
-    //}
+    }
 
     private void countCompletedTasks() {
         System.out.println("=== Count Completed Tasks ===");
-        int completedTaskCount = taskManager.countCompletedTasks();
+        int completedTaskCount = taskService.countCompletedTasks();
         System.out.println("Number of completed tasks: " + completedTaskCount);
     }
 
     private void countToDoTasks() {
         System.out.println("=== Count To-Do Tasks ===");
-        int toDoTaskCount = taskManager.countToDoTasks();
+        int toDoTaskCount = taskService.countToDoTasks();
         System.out.println("Number of to-do tasks: " + toDoTaskCount);
     }
 
     private void countDoingTasks() {
         System.out.println("=== Count Doing Tasks ===");
-        int doingTaskCount = taskManager.countDoingTasks();
+        int doingTaskCount = taskService.countDoingTasks();
         System.out.println("Number of tasks in progress: " + doingTaskCount);
     }
 
     private static void checkAlarms(TaskService taskManager) {
-      /*  List<Task> tasksWithAlarms = taskManager.getTasksWithAlarms();
-        LocalDateTime now = LocalDateTime.now();
+        List<Task> tasksWithAlarms = taskManager.getTasksWithAlarms();
 
         for (Task task : tasksWithAlarms) {
-            List<LocalDateTime> alarms = task.getAlarms();
-            for (LocalDateTime alarmDateTime : alarms) {
-                if (now.isEqual(alarmDateTime) || now.isAfter(alarmDateTime)) {
-                    System.out.println("ALERTA: Tarefa '" + task.getName() + "' com alarme para " + alarmDateTime);
+            List<Alarm> alarms = task.getAlarms();
+            for (Alarm alarm : alarms) {
+                AlarmType alarmType = alarm.getAlarmType();
+
+                if (alarmType == AlarmType.ALARM_ANTICIPATED) {
+                    System.out.println("ALERTA ANTECIPADO: Tarefa '" + task.getName() + "' com alarme para " + alarm.getAlarmTime());
+                } else if (alarmType == AlarmType.ALARM) {
+                    System.out.println("ALERTA: Tarefa '" + task.getName() + "' com alarme para " + alarm.getAlarmTime());
                 }
             }
-        }*/
+        }
     }
 
-    private int readIntInput(String message) {
+    private int readIntInput() {
         System.out.println();
-        System.out.print(message);
+        System.out.print("Enter your choice: ");
         int input = -1;
         while (input == -1) {
             try {
                 input = Integer.parseInt(scanner.nextLine());
             } catch (NumberFormatException e) {
                 System.out.println("Invalid input. Please enter a valid integer.");
-                System.out.print(message);
+                System.out.print("Enter your choice: ");
             }
         }
         return input;

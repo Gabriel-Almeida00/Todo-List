@@ -131,4 +131,14 @@ public class TaskService implements ITaskService {
                 .filter(task -> task.getDeadline().toLocalDate().isEqual(date))
                 .collect(Collectors.toList());
     }
+
+    public List<Task> getTasksWithAlarms() {
+        List<Task> tasksWithAlarms = new ArrayList<>();
+        for (Task task : tasks) {
+            if (task.hasAlarms()) {
+                tasksWithAlarms.add(task);
+            }
+        }
+        return tasksWithAlarms;
+    }
 }

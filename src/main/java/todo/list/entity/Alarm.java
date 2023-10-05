@@ -19,7 +19,7 @@ public class Alarm {
 
     public AlarmType getAlarmType() {
         if (alarmTime != null) {
-            LocalDateTime now = LocalDateTime.now();
+            LocalDateTime now = LocalDateTime.now().withSecond(0).withNano(0);
             LocalDateTime alarmTimeMinusPeriod = alarmTime.minusMinutes(alarmPeriodMinutes);
 
             boolean isAlarmTimeMinusPeriod = now.isEqual(alarmTimeMinusPeriod);

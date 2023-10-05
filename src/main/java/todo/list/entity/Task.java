@@ -32,9 +32,6 @@ public class Task {
         this.alarms = alarms;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public void setDescription(String description) {
         this.description = description;
@@ -87,5 +84,7 @@ public class Task {
     public List<Alarm> getAlarms() {
         return alarms;
     }
-
+    public boolean hasAlarms() {
+        return !alarms.isEmpty();
+    }
 }

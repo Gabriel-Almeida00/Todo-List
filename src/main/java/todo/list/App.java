@@ -10,11 +10,12 @@ import todo.list.task.task.TaskParseService;
 
 public class App {
     public static void main(String[] args) {
-        String filePath = "/home/gabriel/IdeaProjects/list";
+        String filePath = "/home/gabriel/IdeaProjects/todo-list/list";
         TaskParseService taskParse = new TaskParseService();
-        FileService fileManager = new FileService(filePath, taskParse);
-        TaskService taskManager = new TaskService(fileManager);
-        Menu menu = new Menu(taskManager);
+        FileService fileService = new FileService(filePath, taskParse);
+        TaskService taskService = new TaskService(fileService);
+
+        Menu menu = new Menu(taskService);
         menu.start();
     }
 }
