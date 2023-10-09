@@ -4,9 +4,9 @@
 package todo.list;
 
 import todo.list.UI.Menu;
-import todo.list.task.file.FileService;
-import todo.list.task.task.TaskService;
-import todo.list.task.task.TaskParseService;
+import todo.list.services.file.FileService;
+import todo.list.services.task.TaskService;
+import todo.list.services.task.TaskParseService;
 
 public class App {
     public static void main(String[] args) {

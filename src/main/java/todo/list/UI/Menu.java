@@ -6,7 +6,7 @@ import todo.list.entity.Category;
 import todo.list.entity.Task;
 import todo.list.entity.enums.AlarmType;
 import todo.list.entity.enums.TaskStatus;
-import todo.list.task.task.TaskService;
+import todo.list.services.task.TaskService;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

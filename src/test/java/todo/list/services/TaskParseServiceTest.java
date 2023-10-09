@@ -1,4 +1,4 @@
-package todo.list.task;
+package todo.list.services;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -6,8 +6,8 @@ import todo.list.entity.Alarm;
 import todo.list.entity.Category;
 import todo.list.entity.Task;
 import todo.list.entity.enums.TaskStatus;
-import todo.list.task.task.ITaskParseService;
-import todo.list.task.task.TaskParseService;
+import todo.list.services.task.ITaskParseService;
+import todo.list.services.task.TaskParseService;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
