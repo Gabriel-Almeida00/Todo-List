@@ -23,11 +23,15 @@ public class TaskService implements ITaskService {
     }
 
     public void addTaskWithPriorityRebalance(Task task) {
-       taskDao.addTask(task);
+        taskDao.addTask(task);
     }
 
     public void updateTask(Task updatedTask) {
         taskDao.updateTask(updatedTask);
+    }
+
+    public void deleteTask(Integer taskId) {
+        taskDao.deleteTask(taskId);
     }
 
     public List<Task> getTasksByCategory(String categoryName) {
@@ -35,7 +39,7 @@ public class TaskService implements ITaskService {
     }
 
     public List<Task> getTasksByPriority(Integer priority) {
-       return taskDao.getTasksByPriority(priority);
+        return taskDao.getTasksByPriority(priority);
     }
 
     public List<Task> getTasksByStatus(TaskStatus status) {
@@ -43,26 +47,22 @@ public class TaskService implements ITaskService {
     }
 
     public int countCompletedTasks() {
-       return taskDao.countCompletedTasks();
+        return taskDao.countCompletedTasks();
     }
 
     public int countToDoTasks() {
-      return taskDao.countToDoTasks();
+        return taskDao.countToDoTasks();
     }
 
     public int countDoingTasks() {
         return taskDao.countDoingTasks();
     }
 
-    public void deleteTask(String name) {
-      taskDao.deleteTask(name);
-    }
-
     public List<Task> filterTasksByDate(LocalDate date) {
-       return taskDao.filterTasksByDate(date);
+        return taskDao.filterTasksByDate(date);
     }
 
     public List<Task> getTasksWithAlarms() {
-       return taskDao.getTasksWithAlarms();
+        return taskDao.getTasksWithAlarms();
     }
 }

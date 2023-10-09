@@ -241,18 +241,13 @@ public class Menu {
 
     private void deleteTask() {
         System.out.println("=== Delete Task ===");
-        System.out.print("Nome da Task: ");
+        System.out.print("ID da Task: ");
 
-        String taskName = scanner.nextLine();
-        List<Task> tasks = taskService.listAllTasks();
+        Integer taskId = Integer.parseInt(scanner.nextLine());
 
-        for (Task task : tasks) {
-            if (task.getName().equalsIgnoreCase(taskName)) {
-                taskService.deleteTask(taskName);
-                System.out.println("Task '" + taskName + "' has been deleted.");
+        taskService.deleteTask(taskId);
 
-            }
-        }
+        System.out.println("Task with ID " + taskId + " has been deleted.");
     }
 
     private void filterTasksByDate() {

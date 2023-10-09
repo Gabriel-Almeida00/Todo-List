@@ -3,7 +3,6 @@ package todo.list.dao;
 import todo.list.entity.Task;
 import todo.list.entity.enums.TaskStatus;
 import todo.list.services.file.IFileService;
-import todo.list.services.task.ITaskParseService;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -30,6 +29,7 @@ public class TaskDao implements ITaskDao{
     public void addTask(Task task) {
         try {
             List<Task> tasks = fileService.loadTasks();
+
             tasks.add(task);
             tasks.sort((t1, t2) -> Integer.compare(t2.getPriority(), t1.getPriority()));
 
@@ -43,15 +43,10 @@ public class TaskDao implements ITaskDao{
     public void updateTask(Task updatedTask) {
         try {
             List<Task> tasks = fileService.loadTasks();
-            for (Task task : tasks) {
-                if (task.getName().equalsIgnoreCase(updatedTask.getName())) {
-                    task.setDescription(updatedTask.getDescription());
-                    task.setDeadline(updatedTask.getDeadline());
-                    task.setPriority(updatedTask.getPriority());
-                    task.setCategory(updatedTask.getCategory());
-                    task.setStatus(updatedTask.getStatus());
-                    task.setAlarms(updatedTask.getAlarms());
-
+            for (int i = 0; i < tasks.size(); i++) {
+                Task task = tasks.get(i);
+                if (task.getId().equals(updatedTask.getId())) {
+                    tasks.set(i, updatedTask);
                     fileService.saveTasks(tasks);
                     return;
                 }
@@ -62,10 +57,10 @@ public class TaskDao implements ITaskDao{
     }
 
     @Override
-    public void deleteTask(String name) {
+    public void deleteTask(Integer taskId) {
         try {
             List<Task> tasks = fileService.loadTasks();
-            tasks.removeIf(task -> task.getName().equalsIgnoreCase(name));
+            tasks.removeIf(task -> task.getId().equals(taskId));
             fileService.saveTasks(tasks);
         } catch (IOException e) {
             throw new RuntimeException(e);

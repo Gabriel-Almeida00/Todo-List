@@ -6,7 +6,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class Task {
-    private String name;
+    private static  int nextId = 1;
+    private Integer id;
+    private final String name;
     private String description;
     private LocalDateTime deadline;
     private Integer priority;
@@ -23,6 +25,7 @@ public class Task {
             TaskStatus status,
             List<Alarm> alarms
     ) {
+        this.id = nextId++;
         this.name = name;
         this.description = description;
         this.deadline = deadline;
@@ -32,6 +35,13 @@ public class Task {
         this.alarms = alarms;
     }
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public void setDescription(String description) {
         this.description = description;

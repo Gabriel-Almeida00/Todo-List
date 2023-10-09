@@ -11,7 +11,7 @@ public interface ITaskService {
      List<Task> listAllTasks();
      void addTaskWithPriorityRebalance(Task task);
      void updateTask(Task task);
-     void deleteTask(String name);
+     void deleteTask(Integer taskId);
 
      List<Task> getTasksByCategory(String categoryName);
      List<Task> getTasksByPriority(Integer priority);

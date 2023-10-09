@@ -10,7 +10,7 @@ public interface ITaskDao {
     List<Task> listAllTasks();
     void addTask(Task task);
     void updateTask(Task updatedTask);
-    void deleteTask(String name);
+    void deleteTask(Integer taskId);
 
     List<Task> getTasksByCategory(String categoryName);
     List<Task> getTasksByPriority(Integer priority);
