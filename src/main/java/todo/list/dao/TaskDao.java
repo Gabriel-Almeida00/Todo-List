@@ -2,6 +2,7 @@ package todo.list.dao;
 
 import todo.list.entity.Task;
 import todo.list.entity.enums.TaskStatus;
+import todo.list.exception.FileException;
 import todo.list.services.file.IFileService;
 
 import java.io.IOException;
@@ -21,7 +22,7 @@ public class TaskDao implements ITaskDao{
         try {
             return fileService.loadTasks();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new FileException("Erro ao ler arquivo" + e);
         }
     }
 
@@ -35,7 +36,7 @@ public class TaskDao implements ITaskDao{
 
             fileService.saveTasks(tasks);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new FileException("Erro ao ler arquivo" + e);
         }
     }
 
@@ -52,7 +53,7 @@ public class TaskDao implements ITaskDao{
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new FileException("Erro ao ler arquivo" + e);
         }
     }
 
@@ -63,7 +64,7 @@ public class TaskDao implements ITaskDao{
             tasks.removeIf(task -> task.getId().equals(taskId));
             fileService.saveTasks(tasks);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new FileException("Erro ao ler arquivo" + e);
         }
     }
 
@@ -76,7 +77,7 @@ public class TaskDao implements ITaskDao{
                     .filter(task -> task.getCategory().getName().equalsIgnoreCase(categoryName))
                     .collect(Collectors.toList());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new FileException("Erro ao ler arquivo" + e);
         }
     }
 
@@ -89,7 +90,7 @@ public class TaskDao implements ITaskDao{
                     .filter(task -> task.getPriority().equals(priority))
                     .collect(Collectors.toList());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new FileException("Erro ao ler arquivo" + e);
         }
     }
 
@@ -102,7 +103,7 @@ public class TaskDao implements ITaskDao{
                     .filter(task -> task.getStatus().equals(status))
                     .collect(Collectors.toList());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new FileException("Erro ao ler arquivo" + e);
         }
     }
 
@@ -117,7 +118,7 @@ public class TaskDao implements ITaskDao{
 
             return (int) count;
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new FileException("Erro ao ler arquivo" + e);
         }
     }
 
@@ -132,7 +133,7 @@ public class TaskDao implements ITaskDao{
 
             return (int) count;
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new FileException("Erro ao ler arquivo" + e);
         }
     }
 
@@ -147,7 +148,7 @@ public class TaskDao implements ITaskDao{
 
             return (int) count;
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new FileException("Erro ao ler arquivo" + e);
         }
     }
 
@@ -160,7 +161,7 @@ public class TaskDao implements ITaskDao{
                     .filter(task -> task.getDeadline().toLocalDate().isEqual(date))
                     .collect(Collectors.toList());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new FileException("Erro ao ler arquivo" + e);
         }
     }
 
@@ -173,7 +174,7 @@ public class TaskDao implements ITaskDao{
                     .filter(Task::hasAlarms)
                     .collect(Collectors.toList());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new FileException("Erro ao ler arquivo" + e);
         }
     }
 }
