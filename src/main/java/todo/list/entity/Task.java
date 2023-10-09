@@ -42,31 +42,6 @@ public class Task {
     public void setId(Integer id) {
         this.id = id;
     }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setDeadline(LocalDateTime deadline) {
-        this.deadline = deadline;
-    }
-
-    public void setPriority(Integer priority) {
-        this.priority = priority;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
-    }
-
-    public void setStatus(TaskStatus status) {
-        this.status = status;
-    }
-
-    public void setAlarms(List<Alarm> alarms) {
-        this.alarms = alarms;
-    }
-
     public String getName() {
         return name;
     }

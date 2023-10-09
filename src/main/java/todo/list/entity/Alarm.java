@@ -3,8 +3,6 @@ package todo.list.entity;
 import todo.list.entity.enums.AlarmType;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Alarm {
     private LocalDateTime alarmTime;
@@ -16,6 +14,7 @@ public class Alarm {
         this.description = description;
         this.alarmPeriodMinutes = alarmPeriodMinutes;
     }
+
 
     public AlarmType getAlarmType() {
         if (alarmTime != null) {
