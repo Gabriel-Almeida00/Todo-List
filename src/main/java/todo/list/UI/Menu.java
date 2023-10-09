@@ -318,6 +318,8 @@ public class Menu {
         System.out.println("Number of tasks in progress: " + doingTaskCount);
     }
 
+
+
     private static void checkAlarms(TaskService taskManager) {
         List<Task> tasksWithAlarms = taskManager.getTasksWithAlarms();
 
