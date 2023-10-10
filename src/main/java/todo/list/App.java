@@ -4,7 +4,7 @@
 package todo.list;
 
 import todo.list.observers.AlarmObserverRegistry;
-import todo.list.UI.Menu;
+import todo.list.UI.TaskView;
 import todo.list.dao.ITaskDao;
 import todo.list.dao.TaskDao;
 import todo.list.services.file.FileService;
@@ -21,7 +21,7 @@ public class App {
         TaskService taskService = new TaskService(taskDao);
 
         AlarmObserverRegistry alarmObserverRegistry = new AlarmObserverRegistry();
-        Menu menu = new Menu(taskService, alarmObserverRegistry);
+        TaskView menu = new TaskView(taskService, alarmObserverRegistry);
         menu.start();
     }
 }

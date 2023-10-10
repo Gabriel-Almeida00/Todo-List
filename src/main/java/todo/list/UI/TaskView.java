@@ -1,6 +1,7 @@
 package todo.list.UI;
 
 
+import todo.list.controller.TaskController;
 import todo.list.entity.Alarm;
 import todo.list.entity.Category;
 import todo.list.entity.Task;
@@ -8,7 +9,7 @@ import todo.list.entity.enums.AlarmType;
 import todo.list.entity.enums.TaskStatus;
 import todo.list.observers.AlarmObserver;
 import todo.list.observers.AlarmObserverRegistry;
-import todo.list.services.task.TaskService;
+import todo.list.services.task.ITaskService;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -17,13 +18,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class Menu implements AlarmObserver {
-    private final TaskService taskService;
+public class TaskView implements AlarmObserver {
+    private TaskController taskController;
+    private final ITaskService taskService;
     private final Scanner scanner;
     private final AlarmObserverRegistry observerRegistry;
 
-    public Menu(TaskService taskService, AlarmObserverRegistry observerRegistry) {
+    public TaskView(ITaskService taskService, AlarmObserverRegistry observerRegistry) {
         this.taskService = taskService;
+        taskController = new TaskController(taskService);
+
         this.observerRegistry = observerRegistry;
         this.scanner = new Scanner(System.in);
     }
@@ -32,7 +36,7 @@ public class Menu implements AlarmObserver {
         boolean exit = false;
 
         while (!exit) {
-            System.out.println("=== Task Manager Menu ===");
+            System.out.println("=== Task Manager TaskView ===");
             System.out.println("1. List all tasks");
             System.out.println("2. Add a task");
             System.out.println("3. Update a task");
@@ -95,32 +99,30 @@ public class Menu implements AlarmObserver {
 
     private void listAllTasks() {
         checkAlarms(taskService, observerRegistry);
-        List<Task> tasks = taskService.listAllTasks();
-        if (tasks.isEmpty()) {
-            System.out.println("No tasks found.");
-        } else {
-            System.out.println("=== All Tasks ===");
-            for (Task task : tasks) {
-                System.out.println("Name: " + task.getName());
-                System.out.println("Description: " + task.getDescription());
-                System.out.println("Deadline: " + task.getDeadline());
-                System.out.println("Priority: " + task.getPriority());
-                System.out.println("Name Category: " + task.getCategory().getName());
-                System.out.println("Description Category: " + task.getCategory().getDescription());
-                System.out.println("Status: " + task.getStatus());
+        List<Task> tasks = taskController.listAllTasks();
 
-                List<Alarm> alarms = task.getAlarms();
-                if (!alarms.isEmpty()) {
-                    System.out.println("Alarms:");
-                    for (Alarm alarm : alarms) {
-                        System.out.println("  - Alarm Time: " + alarm.getAlarmTime());
-                        System.out.println("    Description: " + alarm.getDescription());
-                        System.out.println("    Alarm Period (minutes): " + alarm.getAlarmPeriodMinutes());
-                    }
+        System.out.println("=== All Tasks ===");
+        for (Task task : tasks) {
+            System.out.println("Name: " + task.getName());
+            System.out.println("Description: " + task.getDescription());
+            System.out.println("Deadline: " + task.getDeadline());
+            System.out.println("Priority: " + task.getPriority());
+            System.out.println("Name Category: " + task.getCategory().getName());
+            System.out.println("Description Category: " + task.getCategory().getDescription());
+            System.out.println("Status: " + task.getStatus());
+
+            List<Alarm> alarms = task.getAlarms();
+            if (!alarms.isEmpty()) {
+                System.out.println("Alarms:");
+                for (Alarm alarm : alarms) {
+                    System.out.println("  - Alarm Time: " + alarm.getAlarmTime());
+                    System.out.println("    Description: " + alarm.getDescription());
+                    System.out.println("    Alarm Period (minutes): " + alarm.getAlarmPeriodMinutes());
                 }
-                System.out.println();
             }
+            System.out.println();
         }
+
     }
 
     private Task createTask() {
@@ -184,65 +186,12 @@ public class Menu implements AlarmObserver {
 
     private void addTask() {
         Task task = createTask();
-        taskService.addTaskWithPriorityRebalance(task);
+        taskController.addTaskWithPriorityRebalance(task);
     }
 
     public void updateTask() {
-        System.out.println("=== Update Task ===");
-        System.out.print("Nome (mínimo 3 caracteres): ");
-        String name = scanner.nextLine();
-
-        System.out.print("Descrição (mínimo 3 caracteres): ");
-        String description = scanner.nextLine();
-
-        System.out.print("Data de término (formato: dd/MM/yyyy): ");
-        String deadlineDateInput = scanner.nextLine();
-
-        System.out.print("Hora de término (formato: HH:mm): ");
-        String deadlineTimeInput = scanner.nextLine();
-
-        LocalDateTime deadline = LocalDateTime.parse(
-                deadlineDateInput + " " + deadlineTimeInput, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
-
-        System.out.print("Nível de prioridade (1 a 5): ");
-        Integer priority = scanner.nextInt();
-        scanner.nextLine();
-
-        System.out.print("Nome da Categoria (mínimo 3 caracteres): ");
-        String categoryName = scanner.nextLine();
-
-        System.out.print("Descrição da Categoria (mínimo 3 caracteres): ");
-        String categoryDescription = scanner.nextLine();
-
-        System.out.print("Status (TODO, DOING, DONE): ");
-        String statusInput = scanner.nextLine().toUpperCase();
-        TaskStatus status = TaskStatus.valueOf(statusInput);
-
-        System.out.print("Deseja adicionar um alarme? (S/N): ");
-        String enableAlarmChoice = scanner.nextLine();
-
-        List<Alarm> alarms = new ArrayList<>();
-
-        if (enableAlarmChoice.equalsIgnoreCase("S")) {
-            System.out.print("Digite a data e hora do alarme (formato: dd/MM/yyyy HH:mm): ");
-            String alarmTimeInput = scanner.nextLine();
-            LocalDateTime alarmTime = LocalDateTime.parse(alarmTimeInput, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
-
-            System.out.print("Descrição do alarme: ");
-            String alarmDescription = scanner.nextLine();
-
-            System.out.print("Digite o período de antecedência do alarme (em minutos): ");
-            int alarmPeriodMinutes = scanner.nextInt();
-            scanner.nextLine();
-
-            Alarm alarm = new Alarm(alarmTime, alarmDescription, alarmPeriodMinutes);
-            observerRegistry.addObserver(alarm, this);
-            alarms.add(alarm);
-        }
-        Category category = new Category(categoryName, categoryDescription);
-        Task task = new Task(name, description, deadline, priority, category, status, alarms);
-
-        taskService.updateTask(task);
+        Task task = createTask();
+        taskController.updateTask(task);
     }
 
     private void deleteTask() {
@@ -250,8 +199,7 @@ public class Menu implements AlarmObserver {
         System.out.print("ID da Task: ");
 
         Integer taskId = Integer.parseInt(scanner.nextLine());
-
-        taskService.deleteTask(taskId);
+        taskController.deleteTask(taskId);
 
         System.out.println("Task with ID " + taskId + " has been deleted.");
     }
@@ -262,7 +210,7 @@ public class Menu implements AlarmObserver {
         String dateString = scanner.nextLine();
 
         LocalDate date = LocalDate.parse(dateString, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-        List<Task> filteredTasks = taskService.filterTasksByDate(date);
+        List<Task> filteredTasks = taskController.filterTasksByDate(date);
 
         for (Task task : filteredTasks) {
             System.out.println(task);
@@ -274,7 +222,7 @@ public class Menu implements AlarmObserver {
         System.out.print("Informe o nome da categoria: ");
         String category = scanner.nextLine();
 
-        List<Task> filteredTasks = taskService.getTasksByCategory(category);
+        List<Task> filteredTasks = taskController.getTasksByCategory(category);
         for (Task task : filteredTasks) {
             System.out.println(task);
         }
@@ -287,7 +235,7 @@ public class Menu implements AlarmObserver {
         int priority = scanner.nextInt();
         scanner.nextLine();
 
-        List<Task> filteredTasks = taskService.getTasksByPriority(priority);
+        List<Task> filteredTasks = taskController.getTasksByPriority(priority);
         for (Task task : filteredTasks) {
             System.out.println(task);
         }
@@ -299,7 +247,7 @@ public class Menu implements AlarmObserver {
         String statusInput = scanner.nextLine().toUpperCase();
         TaskStatus status = TaskStatus.valueOf(statusInput);
 
-        List<Task> filteredTasks = taskService.getTasksByStatus(status);
+        List<Task> filteredTasks = taskController.getTasksByStatus(status);
         System.out.println("Tarefas com status '" + status + "':");
         for (Task task : filteredTasks) {
             System.out.println(task);
@@ -308,19 +256,19 @@ public class Menu implements AlarmObserver {
 
     private void countCompletedTasks() {
         System.out.println("=== Count Completed Tasks ===");
-        int completedTaskCount = taskService.countCompletedTasks();
+        int completedTaskCount = taskController.countCompletedTasks();
         System.out.println("Number of completed tasks: " + completedTaskCount);
     }
 
     private void countToDoTasks() {
         System.out.println("=== Count To-Do Tasks ===");
-        int toDoTaskCount = taskService.countToDoTasks();
+        int toDoTaskCount = taskController.countToDoTasks();
         System.out.println("Number of to-do tasks: " + toDoTaskCount);
     }
 
     private void countDoingTasks() {
         System.out.println("=== Count Doing Tasks ===");
-        int doingTaskCount = taskService.countDoingTasks();
+        int doingTaskCount = taskController.countDoingTasks();
         System.out.println("Number of tasks in progress: " + doingTaskCount);
     }
 
@@ -334,7 +282,7 @@ public class Menu implements AlarmObserver {
         }
     }
 
-    private static void checkAlarms(TaskService taskManager, AlarmObserverRegistry observerRegistry) {
+    private static void checkAlarms(ITaskService taskManager, AlarmObserverRegistry observerRegistry) {
         List<Task> tasksWithAlarms = taskManager.getTasksWithAlarms();
 
         for (Task task : tasksWithAlarms) {
@@ -349,7 +297,6 @@ public class Menu implements AlarmObserver {
             }
         }
     }
-
 
     private int readIntInput() {
         System.out.println();

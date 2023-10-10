@@ -23,4 +23,5 @@ public interface ITaskService {
 
 
      List<Task> filterTasksByDate(LocalDate date);
+     List<Task> getTasksWithAlarms();
 }
