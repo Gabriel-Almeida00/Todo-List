@@ -15,12 +15,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class Menu {
+public class Menu implements AlarmObserver {
     private final TaskService taskService;
     private final Scanner scanner;
+    private final AlarmObserverRegistry observerRegistry;
 
-    public Menu(TaskService taskService) {
+    public Menu(TaskService taskService, AlarmObserverRegistry observerRegistry) {
         this.taskService = taskService;
+        this.observerRegistry = observerRegistry;
         this.scanner = new Scanner(System.in);
     }
 
@@ -90,7 +92,7 @@ public class Menu {
     }
 
     private void listAllTasks() {
-        checkAlarms(taskService);
+        checkAlarms(taskService, observerRegistry);
         List<Task> tasks = taskService.listAllTasks();
         if (tasks.isEmpty()) {
             System.out.println("No tasks found.");
@@ -169,6 +171,7 @@ public class Menu {
             scanner.nextLine();
 
             Alarm alarm = new Alarm(alarmTime, alarmDescription, alarmPeriodMinutes);
+            observerRegistry.addObserver(alarm, this);
             alarms.add(alarm);
         }
         Category category = new Category(categoryName, categoryDescription);
@@ -231,6 +234,7 @@ public class Menu {
             scanner.nextLine();
 
             Alarm alarm = new Alarm(alarmTime, alarmDescription, alarmPeriodMinutes);
+            observerRegistry.addObserver(alarm, this);
             alarms.add(alarm);
         }
         Category category = new Category(categoryName, categoryDescription);
@@ -319,23 +323,31 @@ public class Menu {
     }
 
 
+    @Override
+    public void onAlarmTriggered(Task task, Alarm alarm, AlarmType alarmType) {
+        if (alarmType == AlarmType.ALARM_ANTICIPATED) {
+            System.out.println("ALERTA ANTECIPADO: Tarefa '" + task.getName() + "' com alarme para " + alarm.getAlarmTime());
+        } else if (alarmType == AlarmType.ALARM) {
+            System.out.println("ALERTA: Tarefa '" + task.getName() + "' com alarme para " + alarm.getAlarmTime());
+        }
+    }
 
-    private static void checkAlarms(TaskService taskManager) {
+    private static void checkAlarms(TaskService taskManager, AlarmObserverRegistry observerRegistry) {
         List<Task> tasksWithAlarms = taskManager.getTasksWithAlarms();
 
         for (Task task : tasksWithAlarms) {
             List<Alarm> alarms = task.getAlarms();
+
             for (Alarm alarm : alarms) {
                 AlarmType alarmType = alarm.getAlarmType();
 
-                if (alarmType == AlarmType.ALARM_ANTICIPATED) {
-                    System.out.println("ALERTA ANTECIPADO: Tarefa '" + task.getName() + "' com alarme para " + alarm.getAlarmTime());
-                } else if (alarmType == AlarmType.ALARM) {
-                    System.out.println("ALERTA: Tarefa '" + task.getName() + "' com alarme para " + alarm.getAlarmTime());
+                if (alarmType == AlarmType.ALARM_ANTICIPATED || alarmType == AlarmType.ALARM) {
+                    observerRegistry.notifyObservers(alarm, task, alarmType);
                 }
             }
         }
     }
+
 
     private int readIntInput() {
         System.out.println();

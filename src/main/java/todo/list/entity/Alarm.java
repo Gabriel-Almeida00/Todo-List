@@ -1,15 +1,21 @@
 package todo.list.entity;
 
+import todo.list.UI.AlarmObserver;
 import todo.list.entity.enums.AlarmType;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 public class Alarm {
+    private UUID id;
     private LocalDateTime alarmTime;
     private String description;
     private Integer alarmPeriodMinutes;
 
     public Alarm(LocalDateTime alarmTime, String description, Integer alarmPeriodMinutes) {
+        this.id = UUID.randomUUID();
         this.alarmTime = alarmTime;
         this.description = description;
         this.alarmPeriodMinutes = alarmPeriodMinutes;
@@ -31,6 +37,14 @@ public class Alarm {
             }
         }
         return null;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public LocalDateTime getAlarmTime() {

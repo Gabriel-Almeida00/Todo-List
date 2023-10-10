@@ -8,16 +8,17 @@ import todo.list.entity.enums.TaskStatus;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class TaskParseService implements ITaskParseService {
-    public final int NUM_FIELDS = 11;
+    public final int NUM_FIELDS = 12;
 
     @Override
     public Task fromStringArray(String[] parts) {
         if (parts.length != NUM_FIELDS) {
             throw new IllegalArgumentException("Número incorreto de campos");
         }
-        Integer id = Integer.parseInt(parts[0].trim());
+        UUID id = UUID.fromString(parts[0].trim());
         String name = parts[1].trim();
         String description = parts[2].trim();
         LocalDateTime deadline = LocalDateTime.parse(parts[3].trim());
@@ -26,11 +27,13 @@ public class TaskParseService implements ITaskParseService {
         String categoryDescription = parts[6].trim();
         TaskStatus status = TaskStatus.valueOf(parts[7].trim().toUpperCase());
 
-        LocalDateTime alarmTime = LocalDateTime.parse(parts[8].trim());
-        String descriptionAlarm = parts[9].trim();
-        Integer alarmPeriodMinutes = Integer.parseInt(parts[10].trim());
+        UUID idAlarm = UUID.fromString(parts[8].trim());
+        LocalDateTime alarmTime = LocalDateTime.parse(parts[9].trim());
+        String descriptionAlarm = parts[10].trim();
+        Integer alarmPeriodMinutes = Integer.parseInt(parts[11].trim());
 
         Alarm alarm = new Alarm(alarmTime, descriptionAlarm, alarmPeriodMinutes);
+        alarm.setId(idAlarm);
         List<Alarm> alarms = new ArrayList<>();
         alarms.add(alarm);
 
@@ -53,9 +56,10 @@ public class TaskParseService implements ITaskParseService {
         parts[7] = task.getStatus().toString();
 
         for (Alarm alarm : task.getAlarms()) {
-            parts[8] = alarm.getAlarmTime().toString();
-            parts[9] = alarm.getDescription();
-            parts[10] = String.valueOf(alarm.getAlarmPeriodMinutes());
+            parts[8] = String.valueOf(alarm.getId());
+            parts[9] = alarm.getAlarmTime().toString();
+            parts[10] = alarm.getDescription();
+            parts[11] = String.valueOf(alarm.getAlarmPeriodMinutes());
         }
         return parts;
     }

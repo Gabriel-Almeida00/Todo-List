@@ -3,6 +3,7 @@
  */
 package todo.list;
 
+import todo.list.UI.AlarmObserverRegistry;
 import todo.list.UI.Menu;
 import todo.list.dao.ITaskDao;
 import todo.list.dao.TaskDao;
@@ -20,7 +21,8 @@ public class App {
         ITaskDao taskDao = new TaskDao(fileService);
         TaskService taskService = new TaskService(taskDao);
 
-        Menu menu = new Menu(taskService);
+        AlarmObserverRegistry alarmObserverRegistry = new AlarmObserverRegistry();
+        Menu menu = new Menu(taskService, alarmObserverRegistry);
         menu.start();
     }
 }
