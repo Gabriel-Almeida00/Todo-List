@@ -4,9 +4,11 @@ import todo.list.entity.enums.TaskStatus;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 public class Task {
-    private String name;
+    private UUID id;
+    private final String name;
     private String description;
     private LocalDateTime deadline;
     private Integer priority;
@@ -23,6 +25,7 @@ public class Task {
             TaskStatus status,
             List<Alarm> alarms
     ) {
+        this.id = UUID.randomUUID();
         this.name = name;
         this.description = description;
         this.deadline = deadline;
@@ -32,29 +35,12 @@ public class Task {
         this.alarms = alarms;
     }
 
-
-    public void setDescription(String description) {
-        this.description = description;
+    public UUID getId() {
+        return id;
     }
 
-    public void setDeadline(LocalDateTime deadline) {
-        this.deadline = deadline;
-    }
-
-    public void setPriority(Integer priority) {
-        this.priority = priority;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
-    }
-
-    public void setStatus(TaskStatus status) {
-        this.status = status;
-    }
-
-    public void setAlarms(List<Alarm> alarms) {
-        this.alarms = alarms;
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public String getName() {

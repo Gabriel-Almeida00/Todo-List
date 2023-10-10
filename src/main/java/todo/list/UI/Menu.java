@@ -6,7 +6,7 @@ import todo.list.entity.Category;
 import todo.list.entity.Task;
 import todo.list.entity.enums.AlarmType;
 import todo.list.entity.enums.TaskStatus;
-import todo.list.task.task.TaskService;
+import todo.list.services.task.TaskService;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -15,12 +15,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class Menu {
+public class Menu implements AlarmObserver {
     private final TaskService taskService;
     private final Scanner scanner;
+    private final AlarmObserverRegistry observerRegistry;
 
-    public Menu(TaskService taskService) {
+    public Menu(TaskService taskService, AlarmObserverRegistry observerRegistry) {
         this.taskService = taskService;
+        this.observerRegistry = observerRegistry;
         this.scanner = new Scanner(System.in);
     }
 
@@ -90,7 +92,7 @@ public class Menu {
     }
 
     private void listAllTasks() {
-        checkAlarms(taskService);
+        checkAlarms(taskService, observerRegistry);
         List<Task> tasks = taskService.listAllTasks();
         if (tasks.isEmpty()) {
             System.out.println("No tasks found.");
@@ -169,6 +171,7 @@ public class Menu {
             scanner.nextLine();
 
             Alarm alarm = new Alarm(alarmTime, alarmDescription, alarmPeriodMinutes);
+            observerRegistry.addObserver(alarm, this);
             alarms.add(alarm);
         }
         Category category = new Category(categoryName, categoryDescription);
@@ -231,6 +234,7 @@ public class Menu {
             scanner.nextLine();
 
             Alarm alarm = new Alarm(alarmTime, alarmDescription, alarmPeriodMinutes);
+            observerRegistry.addObserver(alarm, this);
             alarms.add(alarm);
         }
         Category category = new Category(categoryName, categoryDescription);
@@ -241,18 +245,13 @@ public class Menu {
 
     private void deleteTask() {
         System.out.println("=== Delete Task ===");
-        System.out.print("Nome da Task: ");
+        System.out.print("ID da Task: ");
 
-        String taskName = scanner.nextLine();
-        List<Task> tasks = taskService.listAllTasks();
+        Integer taskId = Integer.parseInt(scanner.nextLine());
 
-        for (Task task : tasks) {
-            if (task.getName().equalsIgnoreCase(taskName)) {
-                taskService.deleteTask(taskName);
-                System.out.println("Task '" + taskName + "' has been deleted.");
+        taskService.deleteTask(taskId);
 
-            }
-        }
+        System.out.println("Task with ID " + taskId + " has been deleted.");
     }
 
     private void filterTasksByDate() {
@@ -323,22 +322,32 @@ public class Menu {
         System.out.println("Number of tasks in progress: " + doingTaskCount);
     }
 
-    private static void checkAlarms(TaskService taskManager) {
+
+    @Override
+    public void onAlarmTriggered(Task task, Alarm alarm, AlarmType alarmType) {
+        if (alarmType == AlarmType.ALARM_ANTICIPATED) {
+            System.out.println("ALERTA ANTECIPADO: Tarefa '" + task.getName() + "' com alarme para " + alarm.getAlarmTime());
+        } else if (alarmType == AlarmType.ALARM) {
+            System.out.println("ALERTA: Tarefa '" + task.getName() + "' com alarme para " + alarm.getAlarmTime());
+        }
+    }
+
+    private static void checkAlarms(TaskService taskManager, AlarmObserverRegistry observerRegistry) {
         List<Task> tasksWithAlarms = taskManager.getTasksWithAlarms();
 
         for (Task task : tasksWithAlarms) {
             List<Alarm> alarms = task.getAlarms();
+
             for (Alarm alarm : alarms) {
                 AlarmType alarmType = alarm.getAlarmType();
 
-                if (alarmType == AlarmType.ALARM_ANTICIPATED) {
-                    System.out.println("ALERTA ANTECIPADO: Tarefa '" + task.getName() + "' com alarme para " + alarm.getAlarmTime());
-                } else if (alarmType == AlarmType.ALARM) {
-                    System.out.println("ALERTA: Tarefa '" + task.getName() + "' com alarme para " + alarm.getAlarmTime());
+                if (alarmType == AlarmType.ALARM_ANTICIPATED || alarmType == AlarmType.ALARM) {
+                    observerRegistry.notifyObservers(alarm, task, alarmType);
                 }
             }
         }
     }
+
 
     private int readIntInput() {
         System.out.println();
