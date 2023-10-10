@@ -3,11 +3,10 @@
  */
 package todo.list;
 
-import todo.list.UI.AlarmObserverRegistry;
+import todo.list.observers.AlarmObserverRegistry;
 import todo.list.UI.Menu;
 import todo.list.dao.ITaskDao;
 import todo.list.dao.TaskDao;
-import todo.list.entity.Task;
 import todo.list.services.file.FileService;
 import todo.list.services.file.IFileService;
 import todo.list.services.task.TaskService;

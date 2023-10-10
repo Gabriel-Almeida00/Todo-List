@@ -1,4 +1,4 @@
-package todo.list.UI;
+package todo.list.observers;
 
 import todo.list.entity.Alarm;
 import todo.list.entity.Task;
@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public class AlarmObserverRegistry {
-    private Map<UUID, List<AlarmObserver>> observersMap = new HashMap<>();
+    private final Map<UUID, List<AlarmObserver>> observersMap = new HashMap<>();
 
     public void addObserver(Alarm alarm, AlarmObserver observer) {
         UUID alarmId = alarm.getId();

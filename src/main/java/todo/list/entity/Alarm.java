@@ -1,11 +1,8 @@
 package todo.list.entity;
 
-import todo.list.UI.AlarmObserver;
 import todo.list.entity.enums.AlarmType;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 public class Alarm {

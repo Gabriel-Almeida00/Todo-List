@@ -1,4 +1,4 @@
-package todo.list.UI;
+package todo.list.observers;
 
 import todo.list.entity.Alarm;
 import todo.list.entity.Task;
