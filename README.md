@@ -1,10 +1,11 @@
 # ToDo List
 
-Este é um projeto simples de uma aplicação de gerenciamento de tarefas (ToDo List) em Java. Ele permite que o usuário crie, liste e atualize tarefas com base em categorias, prioridades e status. Além disso, as tarefas são salvas em um arquivo CSV para garantir a persistência dos dados.
+Este é um projeto simples de uma aplicação de gerenciamento de tarefas (ToDo List) em Java. Ele permite que o usuário crie, liste e atualize tarefas com base em categorias, prioridades e status. Além disso, as tarefas são salvas em um arquivo txt para garantir a persistência dos dados.
 
 ## Requisitos
 
 - Java 8 ou superior
+- Gradle
 
 ## Funcionalidades
 
@@ -26,6 +27,9 @@ Este é um projeto simples de uma aplicação de gerenciamento de tarefas (ToDo 
 - Contar o número de tarefas concluídas, para fazer e em andamento
 - ###  Alarmes
 O novo recurso de alarme permite ao usuário habilitar um aviso para uma tarefa específica. Ao criar uma tarefa, o usuário pode definir o período de antecedência do alarme em minutos. O sistema verificará periodicamente se há tarefas com alarmes configurados próximos ou iguais ao momento atual e exibirá um alerta para o usuário.
+
+- ###  Design Pattern e MVC
+  O Projeto segue as boas práticas com clean code SOLID e atualmente estou usando modelo MVC, para a funcionalidade de Alarmes foi implementada  o padrão observer
 
 ## Como executar o projeto
 
@@ -60,7 +64,7 @@ java -classpath out Main
 
 ## Persistência dos Dados
 
-As tarefas são salvas em um arquivo CSV chamado "tasks.csv" no mesmo diretório onde o programa é executado. O arquivo é criado automaticamente se ainda não existir. Isso garante que as tarefas sejam persistidas entre as execuções do programa.
+As tarefas são salvas em um arquivo txt chamado "list.txt" no mesmo diretório onde o programa é executado. O arquivo é criado automaticamente se ainda não existir. Isso garante que as tarefas sejam persistidas entre as execuções do programa.
 
 ## Contribuição
 
