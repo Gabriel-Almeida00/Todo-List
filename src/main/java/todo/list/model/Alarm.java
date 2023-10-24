@@ -31,7 +31,7 @@ public class Alarm {
             LocalDateTime now = LocalDateTime.now().withSecond(0).withNano(0);
             LocalDateTime alarmTimeMinusPeriod = alarmTime.minusMinutes(alarmPeriodMinutes);
 
-            if (now.isEqual(alarmTime)) {
+            if (now.isEqual(alarmTime) && now.isAfter(alarmTime)) {
                 return AlarmType.ALARM;
             } else if (now.isEqual(alarmTimeMinusPeriod)) {
                 return AlarmType.ALARM_ANTICIPATED;

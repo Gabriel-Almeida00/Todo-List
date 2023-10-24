@@ -1,1 +1,23 @@
-[{"id":"bf3f7d1b-4a67-4784-af69-97adf96f3e28","name":"teste atualizado","description":"teste atualizado","deadline":"2023-12-12T12:12:00","priority":5,"category":{"name":"teste atulizado","description":"teste atualizado"},"status":"TODO","alarms":[{"id":"40bfd390-ac55-4dea-a76c-282cad6467fa","alarmTime":"2023-12-12T12:12:00","description":"teste atualizado","alarmPeriodMinutes":12,"status":false}]},{"id":"e4445008-e349-4771-8e32-053f22b10a2d","name":"teste","description":"teste","deadline":"2023-10-24T14:00:00","priority":4,"category":{"name":"teste","description":"teste"},"status":"TODO","alarms":[{"id":"72c27c6e-3a4e-48b4-8ab0-e93cdc364b2d","alarmTime":"2023-10-24T13:50:00","description":"teste","alarmPeriodMinutes":12,"status":true}]},{"id":"fe3183b0-1a69-46d2-9c7a-a1096187292e","name":"teste","description":"teste","deadline":"2023-10-24T14:30:00","priority":4,"category":{"name":"teste","description":"teste"},"status":"TODO","alarms":[{"id":"4839a771-8ea6-440e-a2d0-739906a07afa","alarmTime":"2023-10-24T14:10:00","description":"teste","alarmPeriodMinutes":4,"status":false}]},{"id":"c9e09a9e-200e-44a3-85c7-ca069ca92241","name":"teste","description":"teste","deadline":"2023-10-24T14:00:00","priority":3,"category":{"name":"teste","description":"teste"},"status":"TODO","alarms":[{"id":"4bfe9d1c-5710-4718-b942-f34796a56eef","alarmTime":"2023-10-24T13:50:00","description":"teste","alarmPeriodMinutes":8,"status":true}]},{"id":"20404b7f-fa4d-421f-b565-ccc63efcdf46","name":"teste","description":"teste","deadline":"2023-10-24T14:30:00","priority":3,"category":{"name":"teste","description":"teste"},"status":"TODO","alarms":[{"id":"081a3d22-7aca-4322-be23-8bc1ee186096","alarmTime":"2023-10-24T13:55:00","description":"teste","alarmPeriodMinutes":5,"status":true}]},{"id":"9475e08e-49e5-497c-be90-422b1a46c143","name":"teste","description":"teste","deadline":"2023-10-24T15:00:00","priority":2,"category":{"name":"teste","description":"teste"},"status":"TODO","alarms":[{"id":"25543cbf-f2b6-4138-88af-5d3368671490","alarmTime":"2023-10-24T14:30:00","description":"teste","alarmPeriodMinutes":7,"status":true}]},{"id":"a3f8cfae-1741-472a-9eee-fa8529adfee7","name":"teste","description":"teste","deadline":"2023-10-24T15:00:00","priority":2,"category":{"name":"teste","description":"teste"},"status":"TODO","alarms":[{"id":"a4fbc092-9a7e-4cec-8982-e61cad46cd3e","alarmTime":"2023-10-24T14:40:00","description":"teste","alarmPeriodMinutes":12,"status":false}]},{"id":"6e974e03-5514-424a-90a8-c3a81e2ea4a1","name":"teste","description":"teste","deadline":"2023-10-24T14:00:00","priority":1,"category":{"name":"teste","description":"teste"},"status":"TODO","alarms":[{"id":"927272e5-49fc-49b5-88d6-16e34c17219b","alarmTime":"2023-10-24T13:50:00","description":"teste","alarmPeriodMinutes":5,"status":true}]},{"id":"5831ee0d-ffd4-40a6-926b-93413f83df13","name":"teste","description":"teste","deadline":"2023-10-24T15:00:00","priority":1,"category":{"name":"teste","description":"teste"},"status":"TODO","alarms":[{"id":"5b092a41-0345-459a-b5a5-6d78d4f9b969","alarmTime":"2023-10-24T14:30:00","description":"teste","alarmPeriodMinutes":10,"status":true}]}]
+[
+  {
+    "id": "bf3f7d1b-4a67-4784-af69-97adf96f3e28",
+    "name": "teste atualizado",
+    "description": "teste atualizado",
+    "deadline": "2023-10-25T18:40:00",
+    "priority": 5,
+    "category": {
+      "name": "teste atualizado",
+      "description": "teste atualizado"
+    },
+    "status": "DONE",
+    "alarms": [
+      {
+        "id": "c8fd76df-24c4-448a-8a89-66703ff341f6",
+        "alarmTime": "2023-10-24T18:00:00",
+        "description": "teste atualizado ",
+        "alarmPeriodMinutes": 15,
+        "status": true
+      }
+    ]
+  }
+]

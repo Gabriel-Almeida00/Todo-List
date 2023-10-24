@@ -3,24 +3,39 @@
  */
 package todo.list;
 
+import org.telegram.telegrambots.meta.TelegramBotsApi;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
+import todo.list.controller.TaskController;
+import todo.list.observers.bot.BotService;
 import todo.list.observers.AlarmObserverRegistry;
+import todo.list.observers.bot.ConfigTelegram;
 import todo.list.view.TaskView;
 import todo.list.dao.ITaskDao;
 import todo.list.dao.TaskDao;
 import todo.list.data.JsonData;
 import todo.list.data.IJsonData;
 import todo.list.services.TaskService;
+import todo.list.view.ViewTelegram;
 
 public class App {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws TelegramApiException {
         String filePath = "/home/gabriel/IdeaProjects/todo-list/list.json";
-
         IJsonData fileService = new JsonData(filePath);
+
         ITaskDao taskDao = new TaskDao(fileService);
         TaskService taskService = new TaskService(taskDao);
+        TaskController taskController = new TaskController(taskService);
 
-        AlarmObserverRegistry alarmObserverRegistry = new AlarmObserverRegistry();
-        TaskView menu = new TaskView(taskService, alarmObserverRegistry);
-        menu.start();
+        ConfigTelegram configTelegram = new ConfigTelegram();
+        BotService bot = new BotService(configTelegram);
+
+        TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
+        botsApi.registerBot(bot);
+
+        AlarmObserverRegistry alarmObserverRegistry = new AlarmObserverRegistry(bot);
+        TaskView menu = new TaskView(taskController, alarmObserverRegistry);
+        ViewTelegram viewTelegram = new ViewTelegram(menu);
+        viewTelegram.exibirMenu();
     }
 }

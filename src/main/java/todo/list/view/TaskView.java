@@ -11,6 +11,7 @@ import todo.list.observers.AlarmObserver;
 import todo.list.observers.AlarmObserverRegistry;
 import todo.list.services.ITaskService;
 
+import javax.sound.midi.Soundbank;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -21,13 +22,11 @@ import java.util.UUID;
 
 public class TaskView implements AlarmObserver {
     private TaskController taskController;
-    private final ITaskService taskService;
     private final Scanner scanner;
     private final AlarmObserverRegistry observerRegistry;
 
-    public TaskView(ITaskService taskService, AlarmObserverRegistry observerRegistry) {
-        this.taskService = taskService;
-        taskController = new TaskController(taskService);
+    public TaskView(TaskController taskController , AlarmObserverRegistry observerRegistry) {
+      this.taskController = taskController;
 
         this.observerRegistry = observerRegistry;
         this.scanner = new Scanner(System.in);
@@ -37,7 +36,7 @@ public class TaskView implements AlarmObserver {
         boolean exit = false;
 
         while (!exit) {
-            checkAlarms(observerRegistry);
+            checkTask(observerRegistry);
             System.out.println("=== Task Manager TaskView ===");
             System.out.println("1. List all tasks");
             System.out.println("2. Add a task");
@@ -298,38 +297,12 @@ public class TaskView implements AlarmObserver {
     }
 
 
-    public void onAlarmTriggered(Task task, Alarm alarm, AlarmType alarmType) {
-        if (alarmType == AlarmType.ALARM_ANTICIPATED) {
-            System.out.println("ALERTA ANTECIPADO: Tarefa '" + task.getName() + "' com alarme para " + alarm.getAlarmTime());
-        } else if (alarmType == AlarmType.ALARM) {
-            System.out.println("ALERTA: Tarefa '" + task.getName() + "' com alarme para " + alarm.getAlarmTime());
-        } else if (alarmType == AlarmType.ALARM_INTERVAL) {
-            System.out.println("ALERTA NO INTERVALO: Tarefa '" + task.getName() + "' com alarme para " + alarm.getAlarmTime());
-        }
-
-        System.out.println("Pressione 'D' para desativar o alarme ou qualquer outra tecla para continuar.");
-        Scanner scanner = new Scanner(System.in);
-        String userInput = scanner.nextLine();
-        if (userInput.equalsIgnoreCase("D")) {
-           taskController.desativarAlarme(alarm.getId());
-        }
+    public  void checkTask(AlarmObserverRegistry observerRegistry) {
+        List<Task> tasksWithAlarms = taskController.listAllTasks();
+        observerRegistry.notifyObservers(tasksWithAlarms);
     }
 
-    private  void checkAlarms( AlarmObserverRegistry observerRegistry) {
-        List<Task> tasksWithAlarms = taskController.getTasksWithAlarms();
 
-        for (Task task : tasksWithAlarms) {
-            List<Alarm> alarms = task.getAlarms();
-
-            for (Alarm alarm : alarms) {
-                AlarmType alarmType = alarm.getAlarmType();
-
-                if (alarmType == AlarmType.ALARM_ANTICIPATED || alarmType == AlarmType.ALARM || alarmType == AlarmType.ALARM_INTERVAL) {
-                    observerRegistry.notifyObservers(alarm, task, alarmType);
-                }
-            }
-        }
-    }
 
     private int readIntInput() {
         System.out.println();
