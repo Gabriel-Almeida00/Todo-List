@@ -11,6 +11,8 @@ public class Alarm {
     private LocalDateTime alarmTime;
     private String description;
     private Integer alarmPeriodMinutes;
+    private boolean status;
+
 
     public Alarm() {
     }
@@ -20,24 +22,32 @@ public class Alarm {
         this.alarmTime = alarmTime;
         this.description = description;
         this.alarmPeriodMinutes = alarmPeriodMinutes;
+        this.status = true;
     }
 
     @JsonIgnore
     public AlarmType getAlarmType() {
-        if (alarmTime != null) {
+        if (alarmTime != null && isStatus()) {
             LocalDateTime now = LocalDateTime.now().withSecond(0).withNano(0);
             LocalDateTime alarmTimeMinusPeriod = alarmTime.minusMinutes(alarmPeriodMinutes);
 
-            boolean isAlarmTimeMinusPeriod = now.isEqual(alarmTimeMinusPeriod);
-            boolean isAlarmTime = now.isEqual(alarmTime);
-
-            if (isAlarmTimeMinusPeriod) {
-                return AlarmType.ALARM_ANTICIPATED;
-            } else if (isAlarmTime) {
+            if (now.isEqual(alarmTime)) {
                 return AlarmType.ALARM;
+            } else if (now.isEqual(alarmTimeMinusPeriod)) {
+                return AlarmType.ALARM_ANTICIPATED;
+            } else if (now.isAfter(alarmTimeMinusPeriod) && now.isBefore(alarmTime)) {
+                return AlarmType.ALARM_INTERVAL;
             }
         }
         return null;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void desativarAlarme() {
+        status = false;
     }
 
     public UUID getId() {

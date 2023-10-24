@@ -1,4 +1,4 @@
-package todo.list.services.task;
+package todo.list.services;
 
 import todo.list.dao.ITaskDao;
 import todo.list.model.Task;
@@ -61,5 +61,9 @@ public class TaskService implements ITaskService {
 
     public List<Task> getTasksWithAlarms() {
         return taskDao.getTasksWithAlarms();
+    }
+
+    public void desativarAlarme(UUID id){
+        taskDao.desativarAlarme(id);
     }
 }

@@ -9,7 +9,7 @@ import todo.list.model.enums.AlarmType;
 import todo.list.model.enums.TaskStatus;
 import todo.list.observers.AlarmObserver;
 import todo.list.observers.AlarmObserverRegistry;
-import todo.list.services.task.ITaskService;
+import todo.list.services.ITaskService;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -37,6 +37,7 @@ public class TaskView implements AlarmObserver {
         boolean exit = false;
 
         while (!exit) {
+            checkAlarms(observerRegistry);
             System.out.println("=== Task Manager TaskView ===");
             System.out.println("1. List all tasks");
             System.out.println("2. Add a task");
@@ -99,7 +100,6 @@ public class TaskView implements AlarmObserver {
     }
 
     private void listAllTasks() {
-        checkAlarms(taskService, observerRegistry);
         List<Task> tasks = taskController.listAllTasks();
 
         System.out.println("=== All Tasks ===");
@@ -298,17 +298,25 @@ public class TaskView implements AlarmObserver {
     }
 
 
-    @Override
     public void onAlarmTriggered(Task task, Alarm alarm, AlarmType alarmType) {
         if (alarmType == AlarmType.ALARM_ANTICIPATED) {
             System.out.println("ALERTA ANTECIPADO: Tarefa '" + task.getName() + "' com alarme para " + alarm.getAlarmTime());
         } else if (alarmType == AlarmType.ALARM) {
             System.out.println("ALERTA: Tarefa '" + task.getName() + "' com alarme para " + alarm.getAlarmTime());
+        } else if (alarmType == AlarmType.ALARM_INTERVAL) {
+            System.out.println("ALERTA NO INTERVALO: Tarefa '" + task.getName() + "' com alarme para " + alarm.getAlarmTime());
+        }
+
+        System.out.println("Pressione 'D' para desativar o alarme ou qualquer outra tecla para continuar.");
+        Scanner scanner = new Scanner(System.in);
+        String userInput = scanner.nextLine();
+        if (userInput.equalsIgnoreCase("D")) {
+           taskController.desativarAlarme(alarm.getId());
         }
     }
 
-    private static void checkAlarms(ITaskService taskManager, AlarmObserverRegistry observerRegistry) {
-        List<Task> tasksWithAlarms = taskManager.getTasksWithAlarms();
+    private  void checkAlarms( AlarmObserverRegistry observerRegistry) {
+        List<Task> tasksWithAlarms = taskController.getTasksWithAlarms();
 
         for (Task task : tasksWithAlarms) {
             List<Alarm> alarms = task.getAlarms();
@@ -316,7 +324,7 @@ public class TaskView implements AlarmObserver {
             for (Alarm alarm : alarms) {
                 AlarmType alarmType = alarm.getAlarmType();
 
-                if (alarmType == AlarmType.ALARM_ANTICIPATED || alarmType == AlarmType.ALARM) {
+                if (alarmType == AlarmType.ALARM_ANTICIPATED || alarmType == AlarmType.ALARM || alarmType == AlarmType.ALARM_INTERVAL) {
                     observerRegistry.notifyObservers(alarm, task, alarmType);
                 }
             }

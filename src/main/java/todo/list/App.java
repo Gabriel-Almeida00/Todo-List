@@ -9,7 +9,7 @@ import todo.list.dao.ITaskDao;
 import todo.list.dao.TaskDao;
 import todo.list.data.JsonData;
 import todo.list.data.IJsonData;
-import todo.list.services.task.TaskService;
+import todo.list.services.TaskService;
 
 public class App {
     public static void main(String[] args) {

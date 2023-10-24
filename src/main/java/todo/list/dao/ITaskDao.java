@@ -23,4 +23,5 @@ public interface ITaskDao {
 
     List<Task> filterTasksByDate(LocalDate date);
     List<Task> getTasksWithAlarms();
+     void desativarAlarme(UUID id);
 }

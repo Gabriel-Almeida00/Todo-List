@@ -1,4 +1,4 @@
-package todo.list.services.task;
+package todo.list.services;
 
 
 import todo.list.model.Task;
@@ -25,4 +25,5 @@ public interface ITaskService {
 
      List<Task> filterTasksByDate(LocalDate date);
      List<Task> getTasksWithAlarms();
+     void desativarAlarme(UUID id);
 }

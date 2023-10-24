@@ -2,7 +2,7 @@ package todo.list.controller;
 
 import todo.list.model.Task;
 import todo.list.model.enums.TaskStatus;
-import todo.list.services.task.ITaskService;
+import todo.list.services.ITaskService;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -60,5 +60,8 @@ public class TaskController {
 
     public List<Task> getTasksWithAlarms() {
         return taskService.getTasksWithAlarms();
+    }
+    public void desativarAlarme(UUID id){
+        this.taskService.desativarAlarme(id);
     }
 }
