@@ -28,6 +28,9 @@ Este é um projeto simples de uma aplicação de gerenciamento de tarefas (ToDo 
 - ###  Alarmes
 O novo recurso de alarme permite ao usuário habilitar um aviso para uma tarefa específica. Ao criar uma tarefa, o usuário pode definir o período de antecedência do alarme em minutos. O sistema verificará periodicamente se há tarefas com alarmes configurados próximos ou iguais ao momento atual e exibirá um alerta para o usuário.
 
+- ### Telegram
+ Agora as mudanças realizadas em tarefas são notificas pelo telegram , para isso foi feita uma integração com a API do telegram e a bibioteca : https://github.com/rubenlagus/TelegramBots, as notificações acontecem quando uma tarefa é concluida , quando passa do prazo e quando falta 1 dia para o prazo
+
 - ###  Design Pattern e MVC
   O Projeto segue as boas práticas com clean code SOLID e atualmente estou usando modelo MVC, para a funcionalidade de Alarmes foi implementada  o padrão observer
 
