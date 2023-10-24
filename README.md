@@ -1,6 +1,6 @@
 # ToDo List
 
-Este é um projeto simples de uma aplicação de gerenciamento de tarefas (ToDo List) em Java. Ele permite que o usuário crie, liste e atualize tarefas com base em categorias, prioridades e status. Além disso, as tarefas são salvas em um arquivo txt para garantir a persistência dos dados.
+Este é um projeto simples de uma aplicação de gerenciamento de tarefas (ToDo List) em Java. Ele permite que o usuário crie, liste e atualize tarefas com base em categorias, prioridades e status. Além disso, as tarefas são salvas em um JSON para garantir a persistência dos dados.
 
 ## Requisitos
 
@@ -58,13 +58,13 @@ java -classpath out Main
 
 1. Ao executar o programa, você verá um menu de opções.
 2. Escolha a opção "Adicionar Tarefa" e forneça as informações da tarefa quando solicitado.
-3. A tarefa será adicionada à lista e salva no arquivo "tasks.csv".
+3. A tarefa será adicionada à lista e salva no arquivo "list.json".
 4. Você pode listar as tarefas por categoria, prioridade ou status escolhendo as opções apropriadas no menu.
 5. Para atualizar uma tarefa, escolha a opção "Atualizar Tarefa" no menu e siga as instruções.
 
 ## Persistência dos Dados
 
-As tarefas são salvas em um arquivo txt chamado "list.txt" no mesmo diretório onde o programa é executado. O arquivo é criado automaticamente se ainda não existir. Isso garante que as tarefas sejam persistidas entre as execuções do programa.
+As tarefas são salvas em um arquivo txt chamado "list.json" no mesmo diretório onde o programa é executado. O arquivo é criado automaticamente se ainda não existir. Isso garante que as tarefas sejam persistidas entre as execuções do programa.
 
 ## Contribuição
 

@@ -2,11 +2,11 @@ package todo.list.UI;
 
 
 import todo.list.controller.TaskController;
-import todo.list.entity.Alarm;
-import todo.list.entity.Category;
-import todo.list.entity.Task;
-import todo.list.entity.enums.AlarmType;
-import todo.list.entity.enums.TaskStatus;
+import todo.list.model.Alarm;
+import todo.list.model.Category;
+import todo.list.model.Task;
+import todo.list.model.enums.AlarmType;
+import todo.list.model.enums.TaskStatus;
 import todo.list.observers.AlarmObserver;
 import todo.list.observers.AlarmObserverRegistry;
 import todo.list.services.task.ITaskService;

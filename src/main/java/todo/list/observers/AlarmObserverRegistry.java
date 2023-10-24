@@ -1,8 +1,8 @@
 package todo.list.observers;
 
-import todo.list.entity.Alarm;
-import todo.list.entity.Task;
-import todo.list.entity.enums.AlarmType;
+import todo.list.model.Alarm;
+import todo.list.model.Task;
+import todo.list.model.enums.AlarmType;
 
 import java.util.ArrayList;
 import java.util.HashMap;

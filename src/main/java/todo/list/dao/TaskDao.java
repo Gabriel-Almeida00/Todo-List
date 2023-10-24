@@ -1,9 +1,9 @@
 package todo.list.dao;
 
-import todo.list.entity.Task;
-import todo.list.entity.enums.TaskStatus;
+import todo.list.model.Task;
+import todo.list.model.enums.TaskStatus;
 import todo.list.exception.FileException;
-import todo.list.services.file.IFileService;
+import todo.list.data.IJsonData;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -11,9 +11,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class TaskDao implements ITaskDao{
-    private final IFileService fileService;
+    private final IJsonData fileService;
 
-    public TaskDao(IFileService fileService) {
+    public TaskDao(IJsonData fileService) {
         this.fileService = fileService;
     }
 

@@ -1,6 +1,7 @@
-package todo.list.entity;
+package todo.list.model;
 
-import todo.list.entity.enums.AlarmType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import todo.list.model.enums.AlarmType;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -11,6 +12,9 @@ public class Alarm {
     private String description;
     private Integer alarmPeriodMinutes;
 
+    public Alarm() {
+    }
+
     public Alarm(LocalDateTime alarmTime, String description, Integer alarmPeriodMinutes) {
         this.id = UUID.randomUUID();
         this.alarmTime = alarmTime;
@@ -18,7 +22,7 @@ public class Alarm {
         this.alarmPeriodMinutes = alarmPeriodMinutes;
     }
 
-
+    @JsonIgnore
     public AlarmType getAlarmType() {
         if (alarmTime != null) {
             LocalDateTime now = LocalDateTime.now().withSecond(0).withNano(0);
@@ -38,10 +42,6 @@ public class Alarm {
 
     public UUID getId() {
         return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
     }
 
     public LocalDateTime getAlarmTime() {

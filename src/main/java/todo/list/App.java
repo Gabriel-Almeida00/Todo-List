@@ -7,16 +7,15 @@ import todo.list.observers.AlarmObserverRegistry;
 import todo.list.UI.TaskView;
 import todo.list.dao.ITaskDao;
 import todo.list.dao.TaskDao;
-import todo.list.services.file.FileService;
-import todo.list.services.file.IFileService;
+import todo.list.data.JsonData;
+import todo.list.data.IJsonData;
 import todo.list.services.task.TaskService;
-import todo.list.services.task.TaskParseService;
 
 public class App {
     public static void main(String[] args) {
-        String filePath = "/home/gabriel/IdeaProjects/todo-list/list";
-        TaskParseService taskParse = new TaskParseService();
-        IFileService fileService = new FileService(filePath, taskParse);
+        String filePath = "/home/gabriel/IdeaProjects/todo-list/list.json";
+
+        IJsonData fileService = new JsonData(filePath);
         ITaskDao taskDao = new TaskDao(fileService);
         TaskService taskService = new TaskService(taskDao);
 

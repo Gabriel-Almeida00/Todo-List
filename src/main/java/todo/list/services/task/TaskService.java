@@ -1,15 +1,11 @@
 package todo.list.services.task;
 
 import todo.list.dao.ITaskDao;
-import todo.list.entity.Task;
-import todo.list.entity.enums.TaskStatus;
-import todo.list.services.file.IFileService;
+import todo.list.model.Task;
+import todo.list.model.enums.TaskStatus;
 
-import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class TaskService implements ITaskService {
     private final ITaskDao taskDao;

@@ -2,11 +2,11 @@ package todo.list.file;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import todo.list.entity.Alarm;
-import todo.list.entity.Category;
-import todo.list.entity.Task;
-import todo.list.entity.enums.TaskStatus;
-import todo.list.services.file.IFileService;
+import todo.list.model.Alarm;
+import todo.list.model.Category;
+import todo.list.model.Task;
+import todo.list.model.enums.TaskStatus;
+import todo.list.data.IJsonData;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -18,37 +18,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class FileServiceTest {
-    private IFileService fileService;
+    private IJsonData fileService;
 
     @BeforeEach
     public void setUp() {
-        fileService = mock(IFileService.class);
+        fileService = mock(IJsonData.class);
     }
 
-    @Test
-    public void testReadData() throws IOException {
-        List<String> fakeData = new ArrayList<>();
-        fakeData.add("Line 1");
-        fakeData.add("Line 2");
-        fakeData.add("Line 3");
-
-        when(fileService.readData()).thenReturn(fakeData);
-        List<String> readLines = fileService.readData();
-
-        verify(fileService, times(1)).readData();
-        assertEquals(fakeData, readLines);
-    }
-
-    @Test
-    public void testWriteData() throws IOException {
-        List<String> dataToWrite = new ArrayList<>();
-        dataToWrite.add("Line 1");
-        dataToWrite.add("Line 2");
-        dataToWrite.add("Line 3");
-
-        fileService.writeData(dataToWrite);
-        verify(fileService, times(1)).writeData(dataToWrite);
-    }
 
     @Test
     public void testLoadTasks() throws IOException {

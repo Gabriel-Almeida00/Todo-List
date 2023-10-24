@@ -1,8 +1,8 @@
 package todo.list.services.task;
 
 
-import todo.list.entity.Task;
-import todo.list.entity.enums.TaskStatus;
+import todo.list.model.Task;
+import todo.list.model.enums.TaskStatus;
 
 import java.time.LocalDate;
 import java.util.List;

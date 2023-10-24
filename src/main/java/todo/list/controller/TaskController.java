@@ -1,7 +1,7 @@
 package todo.list.controller;
 
-import todo.list.entity.Task;
-import todo.list.entity.enums.TaskStatus;
+import todo.list.model.Task;
+import todo.list.model.enums.TaskStatus;
 import todo.list.services.task.ITaskService;
 
 import java.time.LocalDate;
