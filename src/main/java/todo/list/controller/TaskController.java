@@ -1,11 +1,12 @@
 package todo.list.controller;
 
-import todo.list.entity.Task;
-import todo.list.entity.enums.TaskStatus;
-import todo.list.services.task.ITaskService;
+import todo.list.model.Task;
+import todo.list.model.enums.TaskStatus;
+import todo.list.services.ITaskService;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 public class TaskController {
     ITaskService taskService;
@@ -25,7 +26,7 @@ public class TaskController {
         taskService.updateTask(updatedTask);
     }
 
-    public void deleteTask(Integer taskId) {
+    public void deleteTask(UUID taskId) {
         taskService.deleteTask(taskId);
     }
 
@@ -59,5 +60,8 @@ public class TaskController {
 
     public List<Task> getTasksWithAlarms() {
         return taskService.getTasksWithAlarms();
+    }
+    public void desativarAlarme(UUID id){
+        this.taskService.desativarAlarme(id);
     }
 }

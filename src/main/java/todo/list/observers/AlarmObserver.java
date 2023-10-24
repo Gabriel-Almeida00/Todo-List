@@ -1,9 +1,9 @@
 package todo.list.observers;
 
-import todo.list.entity.Alarm;
-import todo.list.entity.Task;
-import todo.list.entity.enums.AlarmType;
+import todo.list.model.Alarm;
+import todo.list.model.Task;
+import todo.list.model.enums.AlarmType;
 
 public interface AlarmObserver {
-    void onAlarmTriggered(Task task, Alarm alarm, AlarmType alarmType);
+     void checkTask(AlarmObserverRegistry observerRegistry);
 }

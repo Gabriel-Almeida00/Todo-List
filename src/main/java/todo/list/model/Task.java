@@ -1,6 +1,6 @@
-package todo.list.entity;
+package todo.list.model;
 
-import todo.list.entity.enums.TaskStatus;
+import todo.list.model.enums.TaskStatus;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -8,13 +8,16 @@ import java.util.UUID;
 
 public class Task {
     private UUID id;
-    private final String name;
+    private  String name;
     private String description;
     private LocalDateTime deadline;
     private Integer priority;
     private Category category;
     private TaskStatus status;
     private List<Alarm> alarms;
+
+    public Task() {
+    }
 
     public Task(
             String name,

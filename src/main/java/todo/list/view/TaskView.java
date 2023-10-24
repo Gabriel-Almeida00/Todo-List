@@ -1,32 +1,32 @@
-package todo.list.UI;
+package todo.list.view;
 
 
 import todo.list.controller.TaskController;
-import todo.list.entity.Alarm;
-import todo.list.entity.Category;
-import todo.list.entity.Task;
-import todo.list.entity.enums.AlarmType;
-import todo.list.entity.enums.TaskStatus;
+import todo.list.model.Alarm;
+import todo.list.model.Category;
+import todo.list.model.Task;
+import todo.list.model.enums.AlarmType;
+import todo.list.model.enums.TaskStatus;
 import todo.list.observers.AlarmObserver;
 import todo.list.observers.AlarmObserverRegistry;
-import todo.list.services.task.ITaskService;
+import todo.list.services.ITaskService;
 
+import javax.sound.midi.Soundbank;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.UUID;
 
 public class TaskView implements AlarmObserver {
     private TaskController taskController;
-    private final ITaskService taskService;
     private final Scanner scanner;
     private final AlarmObserverRegistry observerRegistry;
 
-    public TaskView(ITaskService taskService, AlarmObserverRegistry observerRegistry) {
-        this.taskService = taskService;
-        taskController = new TaskController(taskService);
+    public TaskView(TaskController taskController , AlarmObserverRegistry observerRegistry) {
+      this.taskController = taskController;
 
         this.observerRegistry = observerRegistry;
         this.scanner = new Scanner(System.in);
@@ -36,6 +36,7 @@ public class TaskView implements AlarmObserver {
         boolean exit = false;
 
         while (!exit) {
+            checkTask(observerRegistry);
             System.out.println("=== Task Manager TaskView ===");
             System.out.println("1. List all tasks");
             System.out.println("2. Add a task");
@@ -98,7 +99,6 @@ public class TaskView implements AlarmObserver {
     }
 
     private void listAllTasks() {
-        checkAlarms(taskService, observerRegistry);
         List<Task> tasks = taskController.listAllTasks();
 
         System.out.println("=== All Tasks ===");
@@ -190,7 +190,11 @@ public class TaskView implements AlarmObserver {
     }
 
     public void updateTask() {
+        System.out.println("Digite o ID da tarefa que deseja atualizar: ");
+        UUID taskId = UUID.fromString(scanner.nextLine());
+
         Task task = createTask();
+        task.setId(taskId);
         taskController.updateTask(task);
     }
 
@@ -198,7 +202,7 @@ public class TaskView implements AlarmObserver {
         System.out.println("=== Delete Task ===");
         System.out.print("ID da Task: ");
 
-        Integer taskId = Integer.parseInt(scanner.nextLine());
+        UUID taskId = UUID.fromString(scanner.nextLine());
         taskController.deleteTask(taskId);
 
         System.out.println("Task with ID " + taskId + " has been deleted.");
@@ -213,7 +217,12 @@ public class TaskView implements AlarmObserver {
         List<Task> filteredTasks = taskController.filterTasksByDate(date);
 
         for (Task task : filteredTasks) {
-            System.out.println(task);
+            System.out.println("==========");
+            System.out.println("Nome:" + task.getName());
+            System.out.println("Descrição:" + task.getDescription());
+            System.out.println("Data de término:" + task.getDeadline());
+            System.out.println("Categoria:" + task.getCategory().getName());
+            System.out.println();
         }
     }
 
@@ -224,7 +233,12 @@ public class TaskView implements AlarmObserver {
 
         List<Task> filteredTasks = taskController.getTasksByCategory(category);
         for (Task task : filteredTasks) {
-            System.out.println(task);
+            System.out.println("=========");
+            System.out.println("Nome:" + task.getName());
+            System.out.println("Descrição:" + task.getDescription());
+            System.out.println("status:" + task.getStatus());
+            System.out.println("Categoria:" + task.getCategory().getName());
+            System.out.println();
         }
     }
 
@@ -237,7 +251,12 @@ public class TaskView implements AlarmObserver {
 
         List<Task> filteredTasks = taskController.getTasksByPriority(priority);
         for (Task task : filteredTasks) {
-            System.out.println(task);
+            System.out.println("===========");
+            System.out.println("Nome:" + task.getName());
+            System.out.println("Descrição:" + task.getDescription());
+            System.out.println("prioridade:" + task.getPriority());
+            System.out.println("Categoria:" + task.getCategory().getName());
+            System.out.println();
         }
     }
 
@@ -250,7 +269,12 @@ public class TaskView implements AlarmObserver {
         List<Task> filteredTasks = taskController.getTasksByStatus(status);
         System.out.println("Tarefas com status '" + status + "':");
         for (Task task : filteredTasks) {
-            System.out.println(task);
+            System.out.println("==========");
+            System.out.println("Nome:" + task.getName());
+            System.out.println("Descrição:" + task.getDescription());
+            System.out.println("status:" + task.getStatus());
+            System.out.println("Categoria:" + task.getCategory().getName());
+            System.out.println();
         }
     }
 
@@ -273,30 +297,12 @@ public class TaskView implements AlarmObserver {
     }
 
 
-    @Override
-    public void onAlarmTriggered(Task task, Alarm alarm, AlarmType alarmType) {
-        if (alarmType == AlarmType.ALARM_ANTICIPATED) {
-            System.out.println("ALERTA ANTECIPADO: Tarefa '" + task.getName() + "' com alarme para " + alarm.getAlarmTime());
-        } else if (alarmType == AlarmType.ALARM) {
-            System.out.println("ALERTA: Tarefa '" + task.getName() + "' com alarme para " + alarm.getAlarmTime());
-        }
+    public  void checkTask(AlarmObserverRegistry observerRegistry) {
+        List<Task> tasksWithAlarms = taskController.listAllTasks();
+        observerRegistry.notifyObservers(tasksWithAlarms);
     }
 
-    private static void checkAlarms(ITaskService taskManager, AlarmObserverRegistry observerRegistry) {
-        List<Task> tasksWithAlarms = taskManager.getTasksWithAlarms();
 
-        for (Task task : tasksWithAlarms) {
-            List<Alarm> alarms = task.getAlarms();
-
-            for (Alarm alarm : alarms) {
-                AlarmType alarmType = alarm.getAlarmType();
-
-                if (alarmType == AlarmType.ALARM_ANTICIPATED || alarmType == AlarmType.ALARM) {
-                    observerRegistry.notifyObservers(alarm, task, alarmType);
-                }
-            }
-        }
-    }
 
     private int readIntInput() {
         System.out.println();

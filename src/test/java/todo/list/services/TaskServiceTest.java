@@ -3,16 +3,16 @@ package todo.list.services;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import todo.list.entity.Alarm;
-import todo.list.entity.Category;
-import todo.list.entity.Task;
-import todo.list.entity.enums.TaskStatus;
-import todo.list.services.task.ITaskService;
+import todo.list.model.Alarm;
+import todo.list.model.Category;
+import todo.list.model.Task;
+import todo.list.model.enums.TaskStatus;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -72,7 +72,7 @@ public class TaskServiceTest {
 
     @Test
     public void testDeleteTask() {
-        Integer taskIdToDelete = 1;
+        UUID taskIdToDelete = UUID.fromString("1fe26c5a-f701-41dc-a635-a6359f39f98a");
 
         taskService.deleteTask(taskIdToDelete);
         verify(taskService).deleteTask(taskIdToDelete);

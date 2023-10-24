@@ -1,15 +1,12 @@
-package todo.list.services.task;
+package todo.list.services;
 
 import todo.list.dao.ITaskDao;
-import todo.list.entity.Task;
-import todo.list.entity.enums.TaskStatus;
-import todo.list.services.file.IFileService;
+import todo.list.model.Task;
+import todo.list.model.enums.TaskStatus;
 
-import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.UUID;
 
 public class TaskService implements ITaskService {
     private final ITaskDao taskDao;
@@ -30,7 +27,7 @@ public class TaskService implements ITaskService {
         taskDao.updateTask(updatedTask);
     }
 
-    public void deleteTask(Integer taskId) {
+    public void deleteTask(UUID taskId) {
         taskDao.deleteTask(taskId);
     }
 
@@ -64,5 +61,9 @@ public class TaskService implements ITaskService {
 
     public List<Task> getTasksWithAlarms() {
         return taskDao.getTasksWithAlarms();
+    }
+
+    public void desativarAlarme(UUID id){
+        taskDao.desativarAlarme(id);
     }
 }
