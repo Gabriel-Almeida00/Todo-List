@@ -6,13 +6,11 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import todo.list.model.Alarm;
 import todo.list.model.Task;
 import todo.list.model.enums.TaskStatus;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
 
 public class BotService extends TelegramLongPollingBot {
 
