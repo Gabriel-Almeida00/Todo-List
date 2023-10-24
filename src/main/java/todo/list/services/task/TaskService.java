@@ -6,6 +6,7 @@ import todo.list.model.enums.TaskStatus;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 public class TaskService implements ITaskService {
     private final ITaskDao taskDao;
@@ -26,7 +27,7 @@ public class TaskService implements ITaskService {
         taskDao.updateTask(updatedTask);
     }
 
-    public void deleteTask(Integer taskId) {
+    public void deleteTask(UUID taskId) {
         taskDao.deleteTask(taskId);
     }
 

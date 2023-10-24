@@ -41,41 +41,21 @@
   },
   {
     "id": "bf3f7d1b-4a67-4784-af69-97adf96f3e28",
-    "name": "teste",
-    "description": "teste",
+    "name": "teste atualizado",
+    "description": "teste atualizado",
     "deadline": "2023-12-12T12:12:00",
-    "priority": 3,
+    "priority": 5,
     "category": {
-      "name": "teste",
-      "description": "teste"
+      "name": "teste atulizado",
+      "description": "teste atualizado"
     },
     "status": "TODO",
     "alarms": [
       {
-        "id": "bb98060f-cd7f-42c7-b3f9-93a37c21940a",
+        "id": "40bfd390-ac55-4dea-a76c-282cad6467fa",
         "alarmTime": "2023-12-12T12:12:00",
-        "description": "teste",
-        "alarmPeriodMinutes": 5
-      }
-    ]
-  },
-  {
-    "id": "7eca3ad4-1641-44a7-adcb-f6e3f7dcf892",
-    "name": "teste3",
-    "description": "teste3",
-    "deadline": "2023-12-12T12:12:00",
-    "priority": 2,
-    "category": {
-      "name": "teste",
-      "description": "teste"
-    },
-    "status": "TODO",
-    "alarms": [
-      {
-        "id": "81d3039e-cf1b-4378-a4ae-d1249b816631",
-        "alarmTime": "2023-12-12T12:12:00",
-        "description": "teste",
-        "alarmPeriodMinutes": 6
+        "description": "teste atualizado",
+        "alarmPeriodMinutes": 12
       }
     ]
   }

@@ -8,6 +8,7 @@ import todo.list.data.IJsonData;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class TaskDao implements ITaskDao{
@@ -58,7 +59,7 @@ public class TaskDao implements ITaskDao{
     }
 
     @Override
-    public void deleteTask(Integer taskId) {
+    public void deleteTask(UUID taskId) {
         try {
             List<Task> tasks = fileService.loadTasks();
             tasks.removeIf(task -> task.getId().equals(taskId));

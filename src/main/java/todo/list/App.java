@@ -4,7 +4,7 @@
 package todo.list;
 
 import todo.list.observers.AlarmObserverRegistry;
-import todo.list.UI.TaskView;
+import todo.list.view.TaskView;
 import todo.list.dao.ITaskDao;
 import todo.list.dao.TaskDao;
 import todo.list.data.JsonData;

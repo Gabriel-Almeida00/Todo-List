@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -72,7 +73,7 @@ public class TaskServiceTest {
 
     @Test
     public void testDeleteTask() {
-        Integer taskIdToDelete = 1;
+        UUID taskIdToDelete = UUID.fromString("1fe26c5a-f701-41dc-a635-a6359f39f98a");
 
         taskService.deleteTask(taskIdToDelete);
         verify(taskService).deleteTask(taskIdToDelete);

@@ -1,4 +1,4 @@
-package todo.list.UI;
+package todo.list.view;
 
 
 import todo.list.controller.TaskController;
@@ -17,6 +17,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.UUID;
 
 public class TaskView implements AlarmObserver {
     private TaskController taskController;
@@ -190,7 +191,11 @@ public class TaskView implements AlarmObserver {
     }
 
     public void updateTask() {
+        System.out.println("Digite o ID da tarefa que deseja atualizar: ");
+        UUID taskId = UUID.fromString(scanner.nextLine());
+
         Task task = createTask();
+        task.setId(taskId);
         taskController.updateTask(task);
     }
 
@@ -198,7 +203,7 @@ public class TaskView implements AlarmObserver {
         System.out.println("=== Delete Task ===");
         System.out.print("ID da Task: ");
 
-        Integer taskId = Integer.parseInt(scanner.nextLine());
+        UUID taskId = UUID.fromString(scanner.nextLine());
         taskController.deleteTask(taskId);
 
         System.out.println("Task with ID " + taskId + " has been deleted.");
@@ -213,7 +218,12 @@ public class TaskView implements AlarmObserver {
         List<Task> filteredTasks = taskController.filterTasksByDate(date);
 
         for (Task task : filteredTasks) {
-            System.out.println(task);
+            System.out.println("==========");
+            System.out.println("Nome:" + task.getName());
+            System.out.println("Descrição:" + task.getDescription());
+            System.out.println("Data de término:" + task.getDeadline());
+            System.out.println("Categoria:" + task.getCategory().getName());
+            System.out.println();
         }
     }
 
@@ -224,7 +234,12 @@ public class TaskView implements AlarmObserver {
 
         List<Task> filteredTasks = taskController.getTasksByCategory(category);
         for (Task task : filteredTasks) {
-            System.out.println(task);
+            System.out.println("=========");
+            System.out.println("Nome:" + task.getName());
+            System.out.println("Descrição:" + task.getDescription());
+            System.out.println("status:" + task.getStatus());
+            System.out.println("Categoria:" + task.getCategory().getName());
+            System.out.println();
         }
     }
 
@@ -237,7 +252,12 @@ public class TaskView implements AlarmObserver {
 
         List<Task> filteredTasks = taskController.getTasksByPriority(priority);
         for (Task task : filteredTasks) {
-            System.out.println(task);
+            System.out.println("===========");
+            System.out.println("Nome:" + task.getName());
+            System.out.println("Descrição:" + task.getDescription());
+            System.out.println("prioridade:" + task.getPriority());
+            System.out.println("Categoria:" + task.getCategory().getName());
+            System.out.println();
         }
     }
 
@@ -250,7 +270,12 @@ public class TaskView implements AlarmObserver {
         List<Task> filteredTasks = taskController.getTasksByStatus(status);
         System.out.println("Tarefas com status '" + status + "':");
         for (Task task : filteredTasks) {
-            System.out.println(task);
+            System.out.println("==========");
+            System.out.println("Nome:" + task.getName());
+            System.out.println("Descrição:" + task.getDescription());
+            System.out.println("status:" + task.getStatus());
+            System.out.println("Categoria:" + task.getCategory().getName());
+            System.out.println();
         }
     }
 

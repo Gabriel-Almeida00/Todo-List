@@ -6,6 +6,7 @@ import todo.list.services.task.ITaskService;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 public class TaskController {
     ITaskService taskService;
@@ -25,7 +26,7 @@ public class TaskController {
         taskService.updateTask(updatedTask);
     }
 
-    public void deleteTask(Integer taskId) {
+    public void deleteTask(UUID taskId) {
         taskService.deleteTask(taskId);
     }
 
