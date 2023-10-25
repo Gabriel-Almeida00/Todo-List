@@ -37,7 +37,7 @@ public class TaskView implements AlarmObserver {
 
         while (!exit) {
             checkTask(observerRegistry);
-            System.out.println("=== Task Manager TaskView ===");
+            System.out.println("=== Task Manager ===");
             System.out.println("1. List all tasks");
             System.out.println("2. Add a task");
             System.out.println("3. Update a task");
