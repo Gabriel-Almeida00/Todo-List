@@ -23,8 +23,12 @@ public class TaskService implements ITaskService {
         taskDao.addTask(task);
     }
 
+    public void setTaskDone(UUID idTask){
+        this.taskDao.setTaskDone(idTask);
+    }
+
     public void updateTask(Task updatedTask) {
-        taskDao.updateTask(updatedTask);
+        this.taskDao.updateTask(updatedTask);
     }
 
     public void deleteTask(UUID taskId) {

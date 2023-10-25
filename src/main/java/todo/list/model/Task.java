@@ -70,6 +70,10 @@ public class Task {
         return status;
     }
 
+    public void setStatus(TaskStatus status) {
+        this.status = status;
+    }
+
     public List<Alarm> getAlarms() {
         return alarms;
     }

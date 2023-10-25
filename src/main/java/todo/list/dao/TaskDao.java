@@ -43,6 +43,23 @@ public class TaskDao implements ITaskDao{
     }
 
     @Override
+    public void setTaskDone(UUID idTask) {
+        try {
+            List<Task> tasks = jsonData.loadTasks();
+            for (Task task : tasks) {
+                if (task.getId().equals(idTask)) {
+                    task.setStatus(TaskStatus.DONE);
+                    jsonData.saveTasks(tasks);
+                    return;
+                }
+            }
+        } catch (IOException e) {
+            throw new FileException("Erro ao ler ou salvar o arquivo: " + e);
+        }
+    }
+
+
+    @Override
     public void updateTask(Task updatedTask) {
         try {
             List<Task> tasks = jsonData.loadTasks();

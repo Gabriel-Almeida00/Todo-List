@@ -11,6 +11,7 @@ public interface ITaskDao {
     List<Task> listAllTasks();
     void addTask(Task task);
     void updateTask(Task updatedTask);
+    public void setTaskDone(UUID idTask);
     void deleteTask(UUID taskId);
 
     List<Task> getTasksByCategory(String categoryName);

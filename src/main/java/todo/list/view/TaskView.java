@@ -25,8 +25,8 @@ public class TaskView implements AlarmObserver {
     private final Scanner scanner;
     private final AlarmObserverRegistry observerRegistry;
 
-    public TaskView(TaskController taskController , AlarmObserverRegistry observerRegistry) {
-      this.taskController = taskController;
+    public TaskView(TaskController taskController, AlarmObserverRegistry observerRegistry) {
+        this.taskController = taskController;
 
         this.observerRegistry = observerRegistry;
         this.scanner = new Scanner(System.in);
@@ -37,19 +37,22 @@ public class TaskView implements AlarmObserver {
 
         while (!exit) {
             checkTask(observerRegistry);
-            System.out.println("=== Task Manager ===");
-            System.out.println("1. List all tasks");
-            System.out.println("2. Add a task");
-            System.out.println("3. Update a task");
-            System.out.println("4. Delete a task");
-            System.out.println("5. Filter tasks by date");
-            System.out.println("6. Filter tasks by Categoria");
-            System.out.println("7. Filter tasks by Prioridade");
-            System.out.println("8. Filter tasks by Status");
-            System.out.println("9. Contar Tarefas Concluídas");
-            System.out.println("10. Contar Tarefas para Fazer");
-            System.out.println("11. Contar Tarefas em Andamento");
-            System.out.println("12. Exit");
+            System.out.println("========");
+            System.out.println("1. Listar tarefas");
+            System.out.println("2. Adicionar  tarefa");
+            System.out.println("3. Atualizar tarefa");
+            System.out.println("4. Excluir Tarefa  tarefa");
+            System.out.println("5. Marcar tarefa como concluída");
+            System.out.println("========");
+            System.out.println("6. listar tarefas por data");
+            System.out.println("7. listar tarefas por categoria");
+            System.out.println("8. listar tarefas por Prioridade");
+            System.out.println("9. listar tarefas por Status");
+            System.out.println("========");
+            System.out.println("10. Contar Tarefas Concluídas");
+            System.out.println("12. Contar Tarefas para Fazer");
+            System.out.println("12. Contar Tarefas em Andamento");
+            System.out.println("13. Exit");
 
             int choice = readIntInput();
 
@@ -67,27 +70,30 @@ public class TaskView implements AlarmObserver {
                     deleteTask();
                     break;
                 case 5:
-                    filterTasksByDate();
+                    marcarTarefaComoConcluida();
                     break;
                 case 6:
-                    getTasksByCategory();
+                    filterTasksByDate();
                     break;
                 case 7:
-                    getTasksByPriority();
+                    getTasksByCategory();
                     break;
                 case 8:
-                    getTasksByStatus();
+                    getTasksByPriority();
                     break;
                 case 9:
-                    countCompletedTasks();
+                    getTasksByStatus();
                     break;
                 case 10:
-                    countToDoTasks();
+                    countCompletedTasks();
                     break;
                 case 11:
-                    countDoingTasks();
+                    countToDoTasks();
                     break;
                 case 12:
+                    countDoingTasks();
+                    break;
+                case 13:
                     exit = true;
                     break;
                 default:
@@ -187,6 +193,7 @@ public class TaskView implements AlarmObserver {
     private void addTask() {
         Task task = createTask();
         taskController.addTaskWithPriorityRebalance(task);
+        System.out.println("id da tarefa: " + task.getId());
     }
 
     public void updateTask() {
@@ -196,6 +203,13 @@ public class TaskView implements AlarmObserver {
         Task task = createTask();
         task.setId(taskId);
         taskController.updateTask(task);
+    }
+
+    public void  marcarTarefaComoConcluida(){
+        System.out.println("Digite o ID da tarefa que deseja atualizar: ");
+        UUID taskId = UUID.fromString(scanner.nextLine());
+
+        taskController.setTaskDone(taskId);
     }
 
     private void deleteTask() {
@@ -297,11 +311,10 @@ public class TaskView implements AlarmObserver {
     }
 
 
-    public  void checkTask(AlarmObserverRegistry observerRegistry) {
+    public void checkTask(AlarmObserverRegistry observerRegistry) {
         List<Task> tasksWithAlarms = taskController.listAllTasks();
         observerRegistry.notifyObservers(tasksWithAlarms);
     }
-
 
 
     private int readIntInput() {

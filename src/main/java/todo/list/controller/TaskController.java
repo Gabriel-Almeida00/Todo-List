@@ -57,11 +57,7 @@ public class TaskController {
     public List<Task> filterTasksByDate(LocalDate date) {
         return taskService.filterTasksByDate(date);
     }
-
-    public List<Task> getTasksWithAlarms() {
-        return taskService.getTasksWithAlarms();
-    }
-    public void desativarAlarme(UUID id){
-        this.taskService.desativarAlarme(id);
+    public void setTaskDone(UUID idTask){
+        this.taskService.setTaskDone(idTask);
     }
 }
